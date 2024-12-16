@@ -1,0 +1,80 @@
+.MusicPlayer {
+    /*background-color: red;*/
+    width: 100%; height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.MusicPlayer .songInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*background-color: red;*/
+    width: 100%;
+    height: 500px;
+}
+.MusicPlayer .buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    /*background-color: green;*/
+    height: max-content;
+
+}
+    .MusicPlayer .Button {
+        width: 100px;
+        height: 100px;
+        /*background-color: red;*/
+        border: 5px solid black;
+        margin-left: 40px; margin-right: 40px;
+        background-size: 100%;
+    }
+    .MusicPlayer .Button:hover {
+        cursor: pointer;
+    }
+.MusicPlayer .albumCover {
+    width: 256px; height: 256px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.MusicPlayer .infobar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px; height: 40px;
+    background-color: #a3a3a3;
+    margin-top: 25px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+.MusicPlayer .audioSlider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*background-color: red;*/
+    width: 80%;
+    height: 50px;
+    margin-left: auto; margin-right: auto; margin-top: 50px;
+    font-weight: bold;
+}
+
+.audioSlider .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 15px; /* Specified height */
+    background: #8f8f8f; /* Grey background */
+    outline: none; /* Remove outline */
+}
+.audioSlider .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 15px; /* Set a specific slider handle width */
+    height: 35px; /* Slider handle height */
+    background: #00007f; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}

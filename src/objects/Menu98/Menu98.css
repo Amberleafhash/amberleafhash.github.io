@@ -1,0 +1,53 @@
+.Menu98 {
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* Fixed positioning */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to truly center */
+    display: flex;
+    background-color: #b6b6b6;
+    z-index: 1000; /* Optional: Ensure it appears above other elements */
+}
+
+.titlebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #000080;
+    width: 100%; height: 25px;
+    color: white;
+    font-size: 14px;
+
+}
+.titlebar p {
+    margin-left: 10px;
+}
+.titlebar .buttonContainer{
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    height: max-content;
+    /*background-color: red;*/
+    margin-left: auto; margin-right: 3px;
+}
+.buttonContainer .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px; height: 16px;
+    background-color: #b6b6b6;
+    margin-left: 2px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.buttonContainer .button:hover {
+    cursor: pointer;
+}
+.Menu98 .Body{
+    display: flex;
+    flex-direction: column;
+    /*background-color: red;*/
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,40 @@
+.Desktop {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #008C8A;
+}
+
+.Desktop .iconBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 64px;
+    height: 90%;
+    /*background-color: #226068;*/
+    margin-left: 10px; margin-top: 10px;
+}
+
+.Desktop .DesktopIcon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px; height: 80px;
+    /*background-color: red;*/
+    margin-bottom: 15px;
+}
+.Desktop .DesktopIcon:hover {
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+.iconName {
+    display: flex;
+    /*background-color: rgba(0, 128, 0, 0.58);*/
+    margin-top: 2px;
+    align-items: center;
+    height: 30px; width: 55px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+}
