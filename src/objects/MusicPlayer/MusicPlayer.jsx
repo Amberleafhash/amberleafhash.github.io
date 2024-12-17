@@ -4,13 +4,15 @@ import SongInfo from "./SongInfo.jsx";
 import ControlButtons from "./ControlButtons.jsx";
 import Slider from "./Slider.jsx";
 import defaultcover from "./img/defaultalbumcover.png";
+import musicMetadata from 'music-metadata-browser'; // Import the music-metadata library
 
-const MusicPlayer = ({ repoUrl }) => { // Receive repoUrl as a prop
+const MusicPlayer = ({ repoUrl }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [songList, setSongList] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0); // Default to first song
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [songMetadata, setSongMetadata] = useState(null); // Store song metadata
     const audioRef = useRef(null);
 
     const currentSong = songList[currentIndex];
@@ -40,27 +42,49 @@ const MusicPlayer = ({ repoUrl }) => { // Receive repoUrl as a prop
     };
 
     const fetchSongs = async () => {
-        const response = await fetch(repoUrl); // Use the dynamic repoUrl
+        const response = await fetch(repoUrl);
         const data = await response.json();
 
         const songs = data
-            .filter(file => file.name.endsWith('.mp3')) // Filter for MP3 files
+            .filter(file => file.name.endsWith('.mp3'))
             .map(file => ({
-                name: file.name.replace('.mp3', ''), // Remove the .mp3 extension for the song name
-                artist: 'Unknown Artist', // You can modify this to include artist info if available
-                src: file.download_url // Use the download URL provided by GitHub
+                name: file.name.replace('.mp3', ''),  // Remove the '.mp3' extension to use as the title
+                artist: 'Unknown Artist',
+                src: file.download_url
             }));
 
         setSongList(songs);
     };
 
+    const fetchMetadata = async (url, songName) => {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const metadata = await musicMetadata.parseBlob(blob);
+            const { common, picture } = metadata;
+
+            setSongMetadata({
+                title: common.title || songName,  // Fallback to songName if no title is found
+                artist: common.artist || 'Unknown Artist',
+                albumCover: picture ? `data:${picture.format};base64,${picture.data.toString('base64')}` : defaultcover,
+            });
+        } catch (error) {
+            console.error('Error fetching metadata:', error);
+            setSongMetadata({
+                title: songName, // Use songName as the fallback title if metadata fetch fails
+                artist: 'Unknown Artist',
+                albumCover: defaultcover,
+            });
+        }
+    };
+
     const playNextSong = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % songList.length); // Loop to first song if at the end
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % songList.length);
         setIsPlaying(true);
     };
 
     const playPreviousSong = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + songList.length) % songList.length); // Loop to last song if at the start
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + songList.length) % songList.length);
         setIsPlaying(true);
     };
 
@@ -72,21 +96,26 @@ const MusicPlayer = ({ repoUrl }) => { // Receive repoUrl as a prop
         return () => {
             audio.removeEventListener("timeupdate", updateSliderValue);
         };
-    }, [repoUrl]); // Fetch songs again when repoUrl changes
+    }, [repoUrl]);
 
     useEffect(() => {
         if (songList.length > 0) {
             const audio = audioRef.current;
-            audio.src = currentSong.src; // Update the audio source
+            audio.src = currentSong.src; // Set the audio source
+            fetchMetadata(currentSong.src, currentSong.name); // Fetch metadata for the new song
             if (isPlaying) {
-                audio.play(); // Play the new song if it was already playing
+                audio.play(); // Play the new song
             }
         }
     }, [currentIndex, songList]);
 
     return (
         <div className="MusicPlayer">
-            <SongInfo songName={currentSong?.name} songArtist={currentSong?.artist} albumCover={defaultcover} />
+            <SongInfo
+                songName={songMetadata?.title}
+                songArtist={songMetadata?.artist}
+                albumCover={songMetadata?.albumCover}
+            />
             <ControlButtons
                 isPlaying={isPlaying}
                 togglePlayPause={togglePlayPause}

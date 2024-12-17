@@ -1,6 +1,5 @@
 {
   "homepage": "amberleafhash.github.io",
-
   "name": "windows9",
   "private": true,
   "version": "0.0.0",
@@ -17,6 +16,8 @@
     "vite": "^6.0.1"
   },
   "dependencies": {
+    "jsmediatags": "^3.9.7",
+    "music-metadata-browser": "^2.5.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
