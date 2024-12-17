@@ -3,19 +3,14 @@ import "./MusicPlayer.css";
 import SongInfo from "./SongInfo.jsx";
 import ControlButtons from "./ControlButtons.jsx";
 import Slider from "./Slider.jsx";
-import odb from "./music/odb.mp3";
 import defaultcover from "./img/defaultalbumcover.png";
 
-const MusicPlayer = () => {
+const MusicPlayer = ({ repoUrl }) => { // Receive repoUrl as a prop
     const [isPlaying, setIsPlaying] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
-    const [songList, setSongList] = useState([
-        { name: "Song 1", artist: "Artist 1", src: "song1.mp3" },
-        { name: "Fuck with Dre Day", artist: "Dr Dre", src: "odb.mp3" },
-        { name: "Song 3", artist: "Artist 3", src: "song3.mp3" }
-    ]);
-    const [currentIndex, setCurrentIndex] = useState(1); // Start with the second song (index 1)
+    const [songList, setSongList] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0); // Default to first song
     const audioRef = useRef(null);
 
     const currentSong = songList[currentIndex];
@@ -45,7 +40,7 @@ const MusicPlayer = () => {
     };
 
     const fetchSongs = async () => {
-        const response = await fetch('https://api.github.com/repos/amberleafhash/toonStorage/contents/');
+        const response = await fetch(repoUrl); // Use the dynamic repoUrl
         const data = await response.json();
 
         const songs = data
@@ -77,19 +72,21 @@ const MusicPlayer = () => {
         return () => {
             audio.removeEventListener("timeupdate", updateSliderValue);
         };
-    }, []);
+    }, [repoUrl]); // Fetch songs again when repoUrl changes
 
     useEffect(() => {
-        const audio = audioRef.current;
-        audio.src = currentSong.src; // Update the audio source
-        if (isPlaying) {
-            audio.play(); // Play the new song if it was already playing
+        if (songList.length > 0) {
+            const audio = audioRef.current;
+            audio.src = currentSong.src; // Update the audio source
+            if (isPlaying) {
+                audio.play(); // Play the new song if it was already playing
+            }
         }
-    }, [currentIndex]);
+    }, [currentIndex, songList]);
 
     return (
         <div className="MusicPlayer">
-            <SongInfo songName={currentSong.name} songArtist={currentSong.artist} albumCover={defaultcover} />
+            <SongInfo songName={currentSong?.name} songArtist={currentSong?.artist} albumCover={defaultcover} />
             <ControlButtons
                 isPlaying={isPlaying}
                 togglePlayPause={togglePlayPause}
@@ -101,7 +98,7 @@ const MusicPlayer = () => {
                 currentTime={currentTime}
                 handleSliderChange={handleSliderChange}
             />
-            <audio ref={audioRef} src={currentSong.src} />
+            <audio ref={audioRef} />
         </div>
     );
 };
