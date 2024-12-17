@@ -79,9 +79,17 @@ const MusicPlayer = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const audio = audioRef.current;
+        audio.src = currentSong.src; // Update the audio source
+        if (isPlaying) {
+            audio.play(); // Play the new song if it was already playing
+        }
+    }, [currentIndex]);
+
     return (
         <div className="MusicPlayer">
-            <SongInfo songName={currentSong.name} songArtist={currentSong.artist} albumCover="defaultAlbumCover.png" />
+            <SongInfo songName={currentSong.name} songArtist={currentSong.artist} albumCover={defaultcover} />
             <ControlButtons
                 isPlaying={isPlaying}
                 togglePlayPause={togglePlayPause}
