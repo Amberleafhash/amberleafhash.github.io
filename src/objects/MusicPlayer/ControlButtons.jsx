@@ -4,7 +4,7 @@ import pauseButton from "./img/pausebutton.png";
 import forwardButton from "./img/forwardbutton.png";
 import rewindButton from "./img/rewindbutton.png";
 
-const ControlButtons = ({ isPlaying, togglePlayPause }) => {
+const ControlButtons = ({ isPlaying, togglePlayPause, playNextSong, playPreviousSong }) => {
     const pauseButtonStyle = { backgroundImage: `url(${pauseButton})` };
     const playButtonStyle = { backgroundImage: `url(${playButton})` };
     const forwardButtonStyle = { backgroundImage: `url(${forwardButton})` };
@@ -12,13 +12,13 @@ const ControlButtons = ({ isPlaying, togglePlayPause }) => {
 
     return (
         <div className="buttonContainer">
-            <div className="Button" style={rewindButtonStyle}></div>
+            <div className="Button" style={rewindButtonStyle} onClick={playPreviousSong}></div>
             <div
                 className="Button"
                 onClick={togglePlayPause}
                 style={isPlaying ? pauseButtonStyle : playButtonStyle}
             ></div>
-            <div className="Button" style={forwardButtonStyle}></div>
+            <div className="Button" style={forwardButtonStyle} onClick={playNextSong}></div>
         </div>
     );
 };
