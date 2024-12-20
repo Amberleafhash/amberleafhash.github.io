@@ -1,28 +1,13 @@
 import "./Desktop.css";
 import React from 'react';
-import musicplayericon from "./img/icons/musicplayer.png";
-import settingsicon from "./img/icons/settings.png";
-import equalizericon from "./img/icons/equalizer.png";
 
-const Desktop = ({ onOpenMusicPlayer, onOpenSettings, onOpenEqualizer }) => {
+const Desktop = ({ icons }) => {
     return (
         <div className="Desktop">
             <div className="iconBox">
-                <DesktopIcon
-                    icon={settingsicon}
-                    iconName="Settings"
-                    onClick={onOpenSettings} // Open Settings
-                />
-                <DesktopIcon
-                    icon={musicplayericon}
-                    iconName="Music Player"
-                    onClick={onOpenMusicPlayer} // Open Music Player
-                />
-                <DesktopIcon
-                    icon={equalizericon}
-                    iconName="Equalizer"
-                    onClick={onOpenEqualizer}
-                />
+                {icons.map(({ id, icon, name, onClick }) => (
+                    <DesktopIcon key={id} icon={icon} iconName={name} onClick={onClick} />
+                ))}
             </div>
         </div>
     );
