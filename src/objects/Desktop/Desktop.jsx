@@ -16,10 +16,14 @@ const Desktop = ({ icons }) => {
 const DesktopIcon = ({ icon, iconName, onClick }) => {
     return (
         <div className="DesktopIcon" onClick={onClick}>
-            <img src={icon} alt={iconName} />
-            <div className="iconName">
-                <p>{iconName}</p>
+            <div className="item">
+                <img src={icon} alt={iconName} />
+                <div className="iconName">
+                    <p>{iconName}</p>
+                </div>
             </div>
+
+
         </div>
     );
 };

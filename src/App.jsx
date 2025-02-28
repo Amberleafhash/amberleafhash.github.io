@@ -57,16 +57,14 @@ function App() {
                     <Settings onSubmitRepo={handleMusicRepoChange} /> {/* Pass the handleRepoChange function to Settings */}
                 </Menu98>
             )}
-
-            {isAssistantOpen && (
-                <Menu98 title="Equalizer" width={800} height={800} onClose={closeAssistant}>
-                    <Chatbot />
+            {isEqualizerOpen && (
+                <Menu98 title="Equalizer" width={800} height={800} onClose={closeEqualizer}>
+                    <h2>Work in progress lad</h2>
                 </Menu98>
             )}
-
-            {isEqualizerOpen && (
-                <Menu98 title="Assistant" width={800} height={800} onClose={closeEqualizer}>
-                    <h2>Work in progress lad</h2>
+            {isAssistantOpen && (
+                <Menu98 title="Assistant" width={800} height={800} onClose={closeAssistant}>
+                    <Chatbot />
                 </Menu98>
             )}
 

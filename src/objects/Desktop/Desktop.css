@@ -18,20 +18,29 @@
 .Desktop .DesktopIcon {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 48px; height: 80px;
+    justify-content: center;
+    width: 75px; height: 90px;
+    margin-top: 10px;
     /*background-color: red;*/
-    margin-bottom: 15px;
 }
 .Desktop .DesktopIcon:hover {
-    border: 1px solid #000000;
-    padding: 5px;
-}
+    background-color: rgba(31, 32, 36, 0.29);
+    margin-left: 10px; margin-right: 10px;
 
+}
+.Desktop .DesktopIcon .item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*background-color: green;*/
+    width: 100%; height: 100%;
+}
 .iconName {
     display: flex;
     /*background-color: rgba(0, 128, 0, 0.58);*/
     margin-top: 2px;
+    margin-bottom: 2px;
     align-items: center;
     height: 30px; width: 55px;
     text-align: center;

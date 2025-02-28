@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./Taskbar.css";
 import startbtnimg from "./img/startbutton.png";
 import startmenuimg from "./img/startMenuBarIcon.png";
@@ -34,10 +34,34 @@ const StartButton = ({ onClick }) => {
 };
 
 const TaskbarClock = () => {
-    // Placeholder for a real clock; static for now
+    const [time, setTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            // Use Date object and format it using Intl.DateTimeFormat for better accuracy
+            const formattedTime = new Intl.DateTimeFormat([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true, // This enables AM/PM formatting
+            }).format(new Date());
+
+            setTime(formattedTime);
+        }, 60000); // Update the time every minute
+
+        // Initial time setup
+        setTime(new Intl.DateTimeFormat([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        }).format(new Date()));
+
+        // Clear the interval when the component is unmounted
+        return () => clearInterval(timer);
+    }, []);
+
     return (
         <div className="TaskbarClock">
-            <p>04:20 PM</p>
+            <p>{time}</p>
         </div>
     );
 };
