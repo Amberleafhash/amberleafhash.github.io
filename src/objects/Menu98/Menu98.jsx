@@ -36,11 +36,13 @@ const Menu98 = ({ id, title, width, height, children, onClose, position, zIndex,
                         className="button"
                         style={{ backgroundImage: `url(${minimizeicon})` }}
                         onClick={() => console.log("Minimize clicked")}
+                        onPointerDown={(e) => e.stopPropagation()}  // Prevent drag start
                     />
                     <button
                         className="button"
                         style={{ backgroundImage: `url(${maximizeicon})` }}
                         onClick={() => console.log("Maximize clicked")}
+                        onPointerDown={(e) => e.stopPropagation()}  // Prevent drag start
                     />
                     <button
                         className="button"
@@ -49,6 +51,7 @@ const Menu98 = ({ id, title, width, height, children, onClose, position, zIndex,
                             console.log("Close clicked");
                             onClose();
                         }}
+                        onPointerDown={(e) => e.stopPropagation()}  // Prevent drag start
                     />
                 </div>
             </div>
