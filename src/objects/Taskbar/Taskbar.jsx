@@ -25,6 +25,8 @@ const Taskbar = ({ icons }) => {
     );
 };
 
+
+
 const StartButton = ({ onClick }) => {
     return (
         <div className="StartButton" onClick={onClick}>
@@ -94,5 +96,6 @@ const StartMenuItem = ({ menuItemName, StartMenuIcon, onClick }) => {
         </div>
     );
 };
+
 
 export default Taskbar;
