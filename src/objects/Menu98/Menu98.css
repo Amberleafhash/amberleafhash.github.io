@@ -1,0 +1,52 @@
+.Menu98 {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #b6b6b6;
+    z-index: 1000;
+    border: 1px #000000 solid;
+    box-shadow: #1f2024 0 0 10px 2px;
+}
+
+.titlebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #000080;
+    width: 100%;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+}
+
+.titlebar p {
+    margin-left: 10px;
+}
+
+.titlebar .buttonContainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: 3px;
+}
+
+.buttonContainer .button {
+    width: 20px;
+    height: 16px;
+    margin-left: 2px;
+    background-color: #b6b6b6;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    z-index: 1001;
+}
+
+.Menu98 .Body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}

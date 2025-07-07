@@ -1,0 +1,8 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  /*background-color: #4e2025;*/
+  /*background-color: #008C8A;*/
+  width: 100vw;
+  height: 100vh;
+}

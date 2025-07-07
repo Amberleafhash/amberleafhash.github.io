@@ -1,0 +1,126 @@
+:root {
+    --primaryColor: #ED1215;
+    --secondaryColor: #12EDEA;
+}
+
+.Chatbot {
+    display: flex;
+    flex-direction: column;
+    background: #030000;
+    width: 90%; height: 80%;
+    margin: auto;
+}
+.Chatbot .AiSettings {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #4c4d50;
+    height: 100%; width: 100%;
+}
+.Chatbot .AiSettings .inputContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #26272b;
+    width: 325px; height: 150px;
+    box-shadow: #2c2f32 0 0 10px 4px;
+}
+.Chatbot .AiSettings .ipSubmitButton {
+    display: flex;
+    flex-direction: column;
+    width: 52px; height: 52px;
+    background: #61d350;
+}
+.Chatbot .AiSettings .ipSubmitButton:hover {
+    background: #51ac43;
+    cursor: pointer;
+}
+.Chatbot .AiSettings .ipSubmitButton img {
+    margin: auto;
+    width: 40px; height: 40px;
+}
+.Chatbot .AiSettings input {
+    height: 50px;
+    outline: none;
+    border: none;
+}
+
+.Chatbot .chatBody {
+    width: 100%; height: 92%;
+    background-color: #1f2024;
+
+}
+.Chatbot .titleBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: #a4a8ab;
+}
+.Chatbot .titleBar .settingsButton {
+    position: absolute;
+    left: 5%;
+    width: 50px; height: 50px;
+    background: #474c4e;
+
+}
+.Chatbot .titleBar .settingsButton:hover {
+    background: #303435;
+    cursor: pointer;
+}
+.Chatbot .chatBody .responseBox {
+    display: flex;
+    flex-direction: column;
+    width: 90%; height: 100%;
+    overflow: auto;
+    background-color: #343c3b;
+    margin: auto;
+    color: white;
+}
+.Chatbot .chatBody .responseBox p {
+    margin-left: 15px; margin-right: 15px;
+}
+.Chatbot .chatBody .responseBox .Message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: max-content;
+    background-color: rgba(99, 99, 99, 0.29);
+    margin-bottom: 10px;
+}
+
+.Chatbot .chatBody .responseBox .Message.user {
+}
+
+/* AI message styles */
+.Chatbot .chatBody .responseBox .Message.ai p{
+    margin-left: auto;
+    max-width: 90%;
+}
+
+.Chatbot .userInput {
+    width: 100%; height: 8%;
+    margin-top: auto;
+    background: #afad32;
+    display: flex;
+    flex-direction: row;
+}
+.Chatbot .userInput input {
+    width: 80%;
+    outline: none;
+    text-align: center;
+    border: none;
+}
+.Chatbot .userInput .submitButton {
+    width: 25%; height: 100%;
+    margin: auto;
+    background: var(--secondaryColor);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

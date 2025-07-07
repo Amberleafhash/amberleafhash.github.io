@@ -1,0 +1,46 @@
+.song-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+
+}
+
+.album-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.album-cover {
+    width: 250px;
+    height: 250px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px; /* Space between album cover and text */
+    margin-top: 50px;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #818181;
+    width: 350px; height: 80px;
+    margin-top: 50px; margin-bottom: 50px;
+}
+
+.song-name {
+    font-size: 24px;
+    color: #fff;
+    margin: 0;
+}
+
+.song-artist {
+    font-size: 18px;
+    color: #b0b0b0;
+    margin: 0;
+}

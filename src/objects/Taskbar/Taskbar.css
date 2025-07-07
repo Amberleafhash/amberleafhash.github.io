@@ -1,0 +1,82 @@
+.TaskbarContainer {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: 500px;
+    background-color: rgba(140, 69, 69, 0);
+}
+.Taskbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: 25px;
+    background-color: #C0C0C0;
+}
+.StartButton {
+    display: flex;
+    width: 75px;
+    height: 100%;
+    align-items: center;
+
+}
+    .StartButton img {
+        width: 64px;
+        height: 26px;
+        margin-left: 1px;
+    }
+    .StartButton img:hover {
+        cursor: pointer;
+    }
+
+.TaskbarClock {
+    display: flex;
+    align-items: center;
+    /*background-color: red;*/
+    margin-left: auto;
+    margin-right: 1px;
+    font-size: 12px;
+}
+
+.StartMenu {
+    display: flex;
+    flex-direction: row;
+    width: 400px; height: 500px;
+    background-color: #C0C0C0;
+    border-top: 1px solid black; border-right: 1px solid black;;
+}
+    .StartMenu .leftBar {
+        display: flex;
+        align-items: flex-end;
+        background-color: #00007f;
+        width: 40px; height: 465px;
+        margin: 5px;
+    }
+        .StartMenu .leftBar img {
+            width: 48px; height: 48px;
+        }
+    .StartMenuContent {
+        width: 100%; height: 100%;
+    }
+.StartMenuItem {
+    display: flex;
+    align-items: center;
+    /*background-color: rgba(255, 0, 0, 0.35);*/
+    width: 100%;
+    height: 50px;
+}
+.StartMenuItem:hover {
+    background-color: #a1a1a1;
+    cursor: pointer;
+}
+    .StartMenuItem .StartMenuIcon {
+        width: 40px; height: 40px;
+        /*background-color: red;*/
+        margin-right: 15px; margin-left: 5px;
+    }
+    .StartMenuItem:nth-of-type(1) {
+        margin-top: 5px;
+    }
