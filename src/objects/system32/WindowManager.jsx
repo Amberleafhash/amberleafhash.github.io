@@ -4,11 +4,22 @@ import MusicPlayer from '../MusicPlayer/MusicPlayer.jsx';
 import Settings from "../Settings/Settings.jsx";
 import Chatbot from "../Custom/Chatbot/Chatbot.jsx";
 import CMD from "../CMD/CMD.jsx"
-import BgEdit from "../system32/BgEdit.jsx"; // make sure the path is correct
+import BgEdit from "../system32/BgEdit.jsx";
 import Calculator from '../system32/Calculator.jsx';
 import Notepad from "../system32/Notepad.jsx"
+import NewUserMenu from "../system32/NewUserMenu.jsx"
 
-export default function WindowManager({ windowStates, repoUrl, handleRepoChange, bringToFront, closeWindow, setDesktopBgColor, openBgEdit, openCalculator }) {
+export default function WindowManager({
+                                          windowStates,
+                                          repoUrl,
+                                          handleRepoChange,
+                                          bringToFront,
+                                          closeWindow,
+                                          setDesktopBgColor,
+                                          openBgEdit,
+                                          openCalculator,
+                                          setActiveUser // <-- receive setActiveUser
+                                      }) {
     return (
         <>
             {windowStates.music.isOpen && (
@@ -82,8 +93,7 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     position={windowStates.cmd}
                     zIndex={windowStates.cmd.zIndex}
                 >
-                    <CMD openBgEdit={openBgEdit} openCalculator={openCalculator}/>
-
+                    <CMD openBgEdit={openBgEdit} openCalculator={openCalculator} />
                 </Menu98>
             )}
 
@@ -99,7 +109,7 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     position={windowStates.bgedit}
                     zIndex={windowStates.bgedit.zIndex}
                 >
-                    <BgEdit setDesktopBgColor={setDesktopBgColor}/>
+                    <BgEdit setDesktopBgColor={setDesktopBgColor} />
                 </Menu98>
             )}
 
@@ -114,7 +124,7 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     position={windowStates.calculator}
                     zIndex={windowStates.calculator.zIndex}
                 >
-                    <Calculator/>
+                    <Calculator />
                 </Menu98>
             )}
 
@@ -129,7 +139,25 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     position={windowStates.notepad}
                     zIndex={windowStates.notepad.zIndex}
                 >
-                    <Notepad/>
+                    <Notepad />
+                </Menu98>
+            )}
+
+            {windowStates.newusermenu.isOpen && (
+                <Menu98
+                    id="newusermenu"
+                    title="New User Setup"
+                    width={600}
+                    height={500}
+                    onClose={() => closeWindow("newusermenu")}
+                    onFocus={() => bringToFront("newusermenu")}
+                    position={windowStates.newusermenu}
+                    zIndex={windowStates.newusermenu.zIndex}
+                >
+                    <NewUserMenu
+                        setActiveUser={setActiveUser}
+                        closeWindow={() => closeWindow("newusermenu")}
+                    />
                 </Menu98>
             )}
         </>

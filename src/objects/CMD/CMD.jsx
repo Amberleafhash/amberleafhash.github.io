@@ -41,7 +41,7 @@ const CMD = ({ openBgEdit, openCalculator }) => {
                 <p>--</p>
             </div>
             <div className="userInput" style={{ color: textColor }}>
-                <p>C:\Windows\System32></p>
+                <p>{"C:\\Windows\\System32>"}</p>
                 <input
                     placeholder="Enter command"
                     value={command}

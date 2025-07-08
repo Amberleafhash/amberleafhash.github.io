@@ -17,6 +17,8 @@ import bgediticon from "./objects/Desktop/img/icons/bgediticon.png";
 
 function App() {
     const [desktopBgColor, setDesktopBgColor] = useState('#008C8A');
+    const [activeUser, setActiveUser] = useState(""); // <-- Active user state
+
     const openBgEdit = () => { openWindow("bgedit") };
     const openCalculator = () => { openWindow("calculator") };
 
@@ -33,8 +35,8 @@ function App() {
     const programIcons = [
         { id: 1, name: "Settings", icon: settingsicon, onClick: () => openWindow("settings"), showOnDesktop: true },
         { id: 2, name: "Music Player", icon: musicplayericon, onClick: () => openWindow("music"), showOnDesktop: true },
-        { id: 3, name: "Equalizer", icon: equalizericon, onClick: () => openWindow("equalizer"), showOnDesktop: true }, // Not on desktop
-        { id: 4, name: "Assistant", icon: aiicon, onClick: () => openWindow("assistant"), showOnDesktop: true },  // Not on desktop
+        { id: 3, name: "Equalizer", icon: equalizericon, onClick: () => openWindow("equalizer"), showOnDesktop: true },
+        { id: 4, name: "Assistant", icon: aiicon, onClick: () => openWindow("assistant"), showOnDesktop: true },
         { id: 5, name: "CMD", icon: cmdicon, onClick: () => openWindow("cmd"), showOnDesktop: true },
         { id: 6, name: "Notepad", icon: notepadicon, onClick: () => openWindow("notepad"), showOnDesktop: false },
         { id: 7, name: "BGedit", icon: bgediticon, onClick: () => openWindow("bgedit"), showOnDesktop: false },
@@ -59,6 +61,18 @@ function App() {
     return (
         <DndContext onDragEnd={handleDragEnd}>
             <div className="App">
+                {activeUser && (
+                    <div className="welcome-banner" style={{ padding: '8px', color: 'white' }}>
+                        Welcome, {activeUser.username}!
+                        {activeUser.profilePic && (
+                            <img
+                                src={activeUser.profilePic}
+                                alt="User Profile"
+                                style={{ width: 30, height: 30, borderRadius: '50%', marginLeft: 10 }}
+                            />
+                        )}
+                    </div>
+                )}
                 <WindowManager
                     windowStates={windowStates}
                     repoUrl={repoUrl}
@@ -68,6 +82,7 @@ function App() {
                     setDesktopBgColor={setDesktopBgColor}
                     openBgEdit={openBgEdit}
                     openCalculator={openCalculator}
+                    setActiveUser={setActiveUser} // <-- pass setActiveUser
                 />
                 {/* Only show desktop icons marked with showOnDesktop */}
                 <Desktop icons={programIcons.filter(icon => icon.showOnDesktop)} bgColor={desktopBgColor} />
