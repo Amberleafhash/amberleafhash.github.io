@@ -1,8 +1,16 @@
-.App {
-  display: flex;
-  flex-direction: column;
-  /*background-color: #4e2025;*/
-  /*background-color: #008C8A;*/
+/* Reset default margin and padding */
+html, body {
+  margin: 0;
+  padding: 0;
   width: 100vw;
   height: 100vh;
+  overflow: hidden; /* hide scrollbars globally */
+}
+
+/* Your main app container */
+.App {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* prevent scrollbars inside the app */
+  position: relative; /* for positioning child elements */
 }

@@ -13,13 +13,26 @@ const Menu98 = ({ id, title, width, height, children, onClose, position, zIndex,
         transform
     } = useDraggable({ id });
 
+    // Calculate the raw new position based on current position + drag transform
+    const rawX = position.x + (transform?.x ?? 0);
+    const rawY = position.y + (transform?.y ?? 0);
+
+    // Clamp so the window can't be dragged outside the viewport (visible area)
+    const clampedX = Math.min(
+        Math.max(rawX, 0),
+        window.innerWidth - width
+    );
+
+    const clampedY = Math.min(
+        Math.max(rawY, 0),
+        window.innerHeight - height
+    );
+
     const style = {
         width,
         height,
         zIndex,
-        transform: transform
-            ? `translate3d(${position.x + transform.x}px, ${position.y + transform.y}px, 0)`
-            : `translate3d(${position.x}px, ${position.y}px, 0)`
+        transform: `translate3d(${clampedX}px, ${clampedY}px, 0)`
     };
 
     return (
