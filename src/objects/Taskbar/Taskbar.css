@@ -16,6 +16,33 @@
     height: 25px;
     background-color: #C0C0C0;
 }
+.Taskbar .TaskbarItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #8c8c8c;
+    width: 175px; height: 25px;
+    margin-left: 10px;
+}
+.Taskbar .TaskbarItem img {
+    width: 20px; height: 20px;
+}
+.Taskbar .TaskbarItem div:nth-of-type(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*background-color: red;*/
+    width: 25px; height: 25px;
+}
+.Taskbar .TaskbarItem div:nth-of-type(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*background-color: green;*/
+    height: 20px; width: max-content;
+    margin-left: 5px;
+
+}
 .StartButton {
     display: flex;
     width: 75px;
