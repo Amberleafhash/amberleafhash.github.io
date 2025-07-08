@@ -1,0 +1,9 @@
+import __vite__cjsImport0_react from "/node_modules/.vite/deps/react.js?v=5fa4e50b"; const React = __vite__cjsImport0_react.__esModule ? __vite__cjsImport0_react.default : __vite__cjsImport0_react;
+import __vite__cjsImport1_reactDom_client from "/node_modules/.vite/deps/react-dom_client.js?v=5fa4e50b"; const ReactDOM = __vite__cjsImport1_reactDom_client.__esModule ? __vite__cjsImport1_reactDom_client.default : __vite__cjsImport1_reactDom_client;
+import "/src/main.css";
+import App from "/src/App.jsx?t=1751933122261";
+ReactDOM.createRoot(document.querySelector("#main")).render(
+  /* @__PURE__ */ React.createElement(React.StrictMode, null, " ", /* @__PURE__ */ React.createElement(App, null))
+);
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1haW4uanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XHJcbmltcG9ydCBSZWFjdERPTSBmcm9tICdyZWFjdC1kb20vY2xpZW50JztcclxuaW1wb3J0ICcuL21haW4uY3NzJztcclxuaW1wb3J0IEFwcCBmcm9tICcuL0FwcC5qc3gnO1xyXG5cclxuUmVhY3RET00uY3JlYXRlUm9vdChkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjbWFpbicpKS5yZW5kZXIoXHJcbiAgICA8UmVhY3QuU3RyaWN0TW9kZT4gey8qIEZpeGVkIFJlYWN0U3RyaWN0TW9kZSAqL31cclxuICAgICAgICA8QXBwIC8+XHJcbiAgICA8L1JlYWN0LlN0cmljdE1vZGU+XHJcbik7XHJcbiJdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxXQUFXO0FBQ2xCLE9BQU8sY0FBYztBQUNyQixPQUFPO0FBQ1AsT0FBTyxTQUFTO0FBRWhCLFNBQVMsV0FBVyxTQUFTLGNBQWMsT0FBTyxDQUFDLEVBQUU7QUFBQSxFQUNqRCxvQ0FBQyxNQUFNLFlBQU4sTUFBaUIsS0FDZCxvQ0FBQyxTQUFJLENBQ1Q7QUFDSjsiLCJuYW1lcyI6W119

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:5173/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="module" src="./Windows 9_files/client"></script>
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 9</title>
+  <style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/main.css">body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/App.css">.App {
+  display: flex;
+  flex-direction: column;
+  /*background-color: #4e2025;*/
+  /*background-color: #008C8A;*/
+  width: 100vw;
+  height: 100vh;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/Taskbar/Taskbar.css">.TaskbarContainer {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: 500px;
+    background-color: rgba(140, 69, 69, 0);
+}
+.Taskbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: 25px;
+    background-color: #C0C0C0;
+}
+.StartButton {
+    display: flex;
+    width: 75px;
+    height: 100%;
+    align-items: center;
+
+}
+    .StartButton img {
+        width: 64px;
+        height: 26px;
+        margin-left: 1px;
+    }
+    .StartButton img:hover {
+        cursor: pointer;
+    }
+
+.TaskbarClock {
+    display: flex;
+    align-items: center;
+    /*background-color: red;*/
+    margin-left: auto;
+    margin-right: 1px;
+    font-size: 12px;
+}
+
+.StartMenu {
+    display: flex;
+    flex-direction: row;
+    width: 400px; height: 500px;
+    background-color: #C0C0C0;
+    border-top: 1px solid black; border-right: 1px solid black;;
+}
+    .StartMenu .leftBar {
+        display: flex;
+        align-items: flex-end;
+        background-color: #00007f;
+        width: 40px; height: 465px;
+        margin: 5px;
+    }
+        .StartMenu .leftBar img {
+            width: 48px; height: 48px;
+        }
+    .StartMenuContent {
+        width: 100%; height: 100%;
+    }
+.StartMenuItem {
+    display: flex;
+    align-items: center;
+    /*background-color: rgba(255, 0, 0, 0.35);*/
+    width: 100%;
+    height: 50px;
+}
+.StartMenuItem:hover {
+    background-color: #a1a1a1;
+    cursor: pointer;
+}
+    .StartMenuItem .StartMenuIcon {
+        width: 40px; height: 40px;
+        /*background-color: red;*/
+        margin-right: 15px; margin-left: 5px;
+    }
+    .StartMenuItem:nth-of-type(1) {
+        margin-top: 5px;
+    }</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/Desktop/Desktop.css">.Desktop {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #008C8A;
+}
+
+.Desktop .iconBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 64px;
+    height: 90%;
+    /*background-color: #226068;*/
+    margin-left: 10px; margin-top: 10px;
+}
+
+.Desktop .DesktopIcon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 75px; height: 90px;
+    margin-top: 10px;
+    /*background-color: red;*/
+}
+.Desktop .DesktopIcon:hover {
+    background-color: rgba(31, 32, 36, 0.29);
+    margin-left: 10px; margin-right: 10px;
+
+}
+.Desktop .DesktopIcon .item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*background-color: green;*/
+    width: 100%; height: 100%;
+}
+.iconName {
+    display: flex;
+    /*background-color: rgba(0, 128, 0, 0.58);*/
+    margin-top: 2px;
+    margin-bottom: 2px;
+    align-items: center;
+    height: 30px; width: 55px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+}</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/Menu98/Menu98.css">.Menu98 {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #b6b6b6;
+    z-index: 1000;
+    border: 1px #000000 solid;
+    box-shadow: #1f2024 0 0 10px 2px;
+}
+
+.titlebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #000080;
+    width: 100%;
+    height: 25px;
+    color: white;
+    font-size: 14px;
+}
+
+.titlebar p {
+    margin-left: 10px;
+}
+
+.titlebar .buttonContainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: 3px;
+}
+
+.buttonContainer .button {
+    width: 20px;
+    height: 16px;
+    margin-left: 2px;
+    background-color: #b6b6b6;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    z-index: 1001;
+}
+
+.Menu98 .Body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/MusicPlayer/MusicPlayer.css">.MusicPlayer {
+    /*background-color: red;*/
+    width: 100%; height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.MusicPlayer .songInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*background-color: red;*/
+    width: 100%;
+    height: 500px;
+}
+.MusicPlayer .buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    /*background-color: green;*/
+    height: max-content;
+
+}
+    .MusicPlayer .Button {
+        width: 100px;
+        height: 100px;
+        /*background-color: red;*/
+        border: 5px solid black;
+        margin-left: 40px; margin-right: 40px;
+        background-size: 100%;
+    }
+    .MusicPlayer .Button:hover {
+        cursor: pointer;
+    }
+.MusicPlayer .albumCover {
+    width: 256px; height: 256px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.MusicPlayer .infobar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px; height: 40px;
+    background-color: #a3a3a3;
+    margin-top: 25px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+.MusicPlayer .audioSlider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*background-color: red;*/
+    width: 80%;
+    height: 50px;
+    margin-left: auto; margin-right: auto; margin-top: 50px;
+    font-weight: bold;
+}
+
+.audioSlider .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 15px; /* Specified height */
+    background: #8f8f8f; /* Grey background */
+    outline: none; /* Remove outline */
+}
+.audioSlider .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 15px; /* Set a specific slider handle width */
+    height: 35px; /* Slider handle height */
+    background: #00007f; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/MusicPlayer/song-info.css">.song-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+
+}
+
+.album-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.album-cover {
+    width: 250px;
+    height: 250px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px; /* Space between album cover and text */
+    margin-top: 50px;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #818181;
+    width: 350px; height: 80px;
+    margin-top: 50px; margin-bottom: 50px;
+}
+
+.song-name {
+    font-size: 24px;
+    color: #fff;
+    margin: 0;
+}
+
+.song-artist {
+    font-size: 18px;
+    color: #b0b0b0;
+    margin: 0;
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/Settings/Settings.css">.Settings {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: center;
+    gap: 10px; /* Space between input and button */
+    width: 100%; height: 100%;
+    /*background: red;*/
+}
+
+.settings-input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+
+.settings-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #00007f; /* Blue color for button */
+    border: none;
+    cursor: pointer;
+}
+
+.settings-button:hover {
+    background-color: #1010a3; /* Darker blue on hover */
+}
+</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/Custom/Chatbot/Chatbot.css">:root {
+    --primaryColor: #ED1215;
+    --secondaryColor: #12EDEA;
+}
+
+.Chatbot {
+    display: flex;
+    flex-direction: column;
+    background: #030000;
+    width: 90%; height: 80%;
+    margin: auto;
+}
+.Chatbot .AiSettings {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #4c4d50;
+    height: 100%; width: 100%;
+}
+.Chatbot .AiSettings .inputContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #26272b;
+    width: 325px; height: 150px;
+    box-shadow: #2c2f32 0 0 10px 4px;
+}
+.Chatbot .AiSettings .ipSubmitButton {
+    display: flex;
+    flex-direction: column;
+    width: 52px; height: 52px;
+    background: #61d350;
+}
+.Chatbot .AiSettings .ipSubmitButton:hover {
+    background: #51ac43;
+    cursor: pointer;
+}
+.Chatbot .AiSettings .ipSubmitButton img {
+    margin: auto;
+    width: 40px; height: 40px;
+}
+.Chatbot .AiSettings input {
+    height: 50px;
+    outline: none;
+    border: none;
+}
+
+.Chatbot .chatBody {
+    width: 100%; height: 92%;
+    background-color: #1f2024;
+
+}
+.Chatbot .titleBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: #a4a8ab;
+}
+.Chatbot .titleBar .settingsButton {
+    position: absolute;
+    left: 5%;
+    width: 50px; height: 50px;
+    background: #474c4e;
+
+}
+.Chatbot .titleBar .settingsButton:hover {
+    background: #303435;
+    cursor: pointer;
+}
+.Chatbot .chatBody .responseBox {
+    display: flex;
+    flex-direction: column;
+    width: 90%; height: 100%;
+    overflow: auto;
+    background-color: #343c3b;
+    margin: auto;
+    color: white;
+}
+.Chatbot .chatBody .responseBox p {
+    margin-left: 15px; margin-right: 15px;
+}
+.Chatbot .chatBody .responseBox .Message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: max-content;
+    background-color: rgba(99, 99, 99, 0.29);
+    margin-bottom: 10px;
+}
+
+.Chatbot .chatBody .responseBox .Message.user {
+}
+
+/* AI message styles */
+.Chatbot .chatBody .responseBox .Message.ai p{
+    margin-left: auto;
+    max-width: 90%;
+}
+
+.Chatbot .userInput {
+    width: 100%; height: 8%;
+    margin-top: auto;
+    background: #afad32;
+    display: flex;
+    flex-direction: row;
+}
+.Chatbot .userInput input {
+    width: 80%;
+    outline: none;
+    text-align: center;
+    border: none;
+}
+.Chatbot .userInput .submitButton {
+    width: 25%; height: 100%;
+    margin: auto;
+    background: var(--secondaryColor);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}</style><style type="text/css" data-vite-dev-id="C:/Users/Nex/WebstormProjects/amberleafhash.github.io/src/objects/CMD/CMD.css">.CMD {
+    background-color: black;
+    width: 100%; height: 100%;
+    color: white;
+}
+.CMD .initialText {
+    margin:0;
+}
+.CMD p {
+    margin: 0;
+
+}
+.CMD .userInput {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 20px;
+    /*background-color: #0c0c0c;*/
+}
+.CMD input {
+    border: none;
+    background: none;
+    color: white;
+    margin: 0 0 0 5px;
+    font-size: 16px;
+
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+.CMD input:focus,
+.CMD input:active {
+    outline: none;
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+</style></head>
+  <body>
+    <div id="main"> <div class="App"><div class="Menu98" style="width: 800px; height: 500px; z-index: 20; transform: translate3d(160px, 160px, 0px);"><div class="titlebar" role="button" tabindex="0" aria-disabled="false" aria-roledescription="draggable" aria-describedby="DndDescribedBy-0"><p>CMD</p><div class="buttonContainer"><button class="button" style="background-image: url(&quot;/src/objects/Menu98/img/minimizeicon.png&quot;);"></button><button class="button" style="background-image: url(&quot;/src/objects/Menu98/img/maximizeicon.png&quot;);"></button><button class="button" style="background-image: url(&quot;/src/objects/Menu98/img/closeicon.png&quot;);"></button></div></div><div class="Body"><div class="CMD"><div class="initialText"><p>Microsoft Windows [Version 98]</p><p>(c) Microsoft Corporation. All rights reserved.</p><p>--</p></div><div class="userInput"><p>C:\Users\user0</p><input placeholder="bgcolor"></div></div></div></div><div class="Desktop"><div class="iconBox"><div class="DesktopIcon"><div class="item"><img alt="Settings" src="./Windows 9_files/settings.png"><div class="iconName"><p>Settings</p></div></div></div><div class="DesktopIcon"><div class="item"><img alt="Music Player" src="./Windows 9_files/musicplayer.png"><div class="iconName"><p>Music Player</p></div></div></div><div class="DesktopIcon"><div class="item"><img alt="Equalizer" src="./Windows 9_files/equalizer.png"><div class="iconName"><p>Equalizer</p></div></div></div><div class="DesktopIcon"><div class="item"><img alt="Assistant" src="./Windows 9_files/aiicon.png"><div class="iconName"><p>Assistant</p></div></div></div><div class="DesktopIcon"><div class="item"><img alt="CMD" src="./Windows 9_files/cmd.png"><div class="iconName"><p>CMD</p></div></div></div></div></div><div class="TaskbarContainer"><div class="Taskbar"><div class="StartButton"><img class="TaskbarImg" alt="Start Button" src="./Windows 9_files/startbutton.png"></div><div class="TaskbarClock"><p>01:04 AM</p></div></div></div></div><div id="DndDescribedBy-0" style="display: none;">
+    To pick up a draggable item, press the space bar.
+    While dragging, use the arrow keys to move the item.
+    Press space again to drop the item in its new position, or press escape to cancel.
+  </div><div id="DndLiveRegion-0" role="status" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(100%); white-space: nowrap;"></div></div>
+    <script type="module" src="./Windows 9_files/main.jsx"></script>
+<!--  If ya read this, ur acc some proper blouse   -->
+  
+
+</body></html>

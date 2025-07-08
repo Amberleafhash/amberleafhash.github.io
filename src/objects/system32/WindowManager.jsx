@@ -1,11 +1,12 @@
-// src/objects/WindowManager.jsx
 import React from 'react';
-import Menu98 from './Menu98/Menu98.jsx';
-import MusicPlayer from './MusicPlayer/MusicPlayer.jsx';
-import Settings from "./Settings/Settings.jsx";
-import Chatbot from "./Custom/Chatbot/Chatbot.jsx";
+import Menu98 from '../Menu98/Menu98.jsx';
+import MusicPlayer from '../MusicPlayer/MusicPlayer.jsx';
+import Settings from "../Settings/Settings.jsx";
+import Chatbot from "../Custom/Chatbot/Chatbot.jsx";
+import CMD from "../CMD/CMD.jsx"
+import BgEdit from "../system32/BgEdit.jsx"; // make sure the path is correct
 
-export default function WindowManager({ windowStates, repoUrl, handleRepoChange, bringToFront, closeWindow }) {
+export default function WindowManager({ windowStates, repoUrl, handleRepoChange, bringToFront, closeWindow, openWindow, setDesktopBgColor, openBgEdit }) {
     return (
         <>
             {windowStates.music.isOpen && (
@@ -65,6 +66,38 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     zIndex={windowStates.assistant.zIndex}
                 >
                     <Chatbot />
+                </Menu98>
+            )}
+
+            {windowStates.cmd.isOpen && (
+                <Menu98
+                    id="cmd"
+                    title="CMD"
+                    width={800}
+                    height={500}
+                    onClose={() => closeWindow("cmd")}
+                    onFocus={() => bringToFront("cmd")}
+                    position={windowStates.cmd}
+                    zIndex={windowStates.cmd.zIndex}
+                >
+                    <CMD openWindow={openBgEdit} />
+
+                </Menu98>
+            )}
+
+
+            {windowStates.bgedit.isOpen && (
+                <Menu98
+                    id="bgedit"
+                    title="Background Editor"
+                    width={800}
+                    height={800}
+                    onClose={() => closeWindow("bgedit")}
+                    onFocus={() => bringToFront("bgedit")}
+                    position={windowStates.bgedit}
+                    zIndex={windowStates.bgedit.zIndex}
+                >
+                    <BgEdit setDesktopBgColor={setDesktopBgColor}/>
                 </Menu98>
             )}
         </>

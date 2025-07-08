@@ -1,9 +1,9 @@
 import "./Desktop.css";
 import React from 'react';
 
-const Desktop = ({ icons }) => {
+const Desktop = ({ icons, bgColor }) => {
     return (
-        <div className="Desktop">
+        <div className="Desktop" style={{ backgroundColor: bgColor }}>
             <div className="iconBox">
                 {icons.map(({ id, icon, name, onClick }) => (
                     <DesktopIcon key={id} icon={icon} iconName={name} onClick={onClick} />
@@ -22,8 +22,6 @@ const DesktopIcon = ({ icon, iconName, onClick }) => {
                     <p>{iconName}</p>
                 </div>
             </div>
-
-
         </div>
     );
 };
