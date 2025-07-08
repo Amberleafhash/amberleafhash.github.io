@@ -40,8 +40,8 @@
     display: flex;
     /*background-color: rgba(0, 128, 0, 0.58);*/
     margin-top: 2px;
-    margin-bottom: 2px;
     align-items: center;
+    justify-content: center;
     height: 30px; width: 55px;
     text-align: center;
     font-size: 14px;
