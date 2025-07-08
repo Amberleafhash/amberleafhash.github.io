@@ -16,6 +16,7 @@ import settingsicon from "./objects/Desktop/img/icons/settings.png";
 import equalizericon from "./objects/Desktop/img/icons/equalizer.png";
 import aiicon from "./objects/Desktop/img/icons/aiicon.png";
 import cmdicon from "./objects/Desktop/img/icons/cmd.png";
+import notepadicon from "./objects/Desktop/img/icons/notepadicon.png"
 
 // Import BgEdit
 import BgEdit from './objects/system32/BgEdit.jsx';
@@ -24,6 +25,7 @@ function App() {
     // State for Desktop background color
     const [desktopBgColor, setDesktopBgColor] = useState('#008C8A'); // default dark gray
     const openBgEdit = () => {openWindow("bgedit")}
+    const openCalculator = () => {openWindow("calculator")}
 
     // Destructure states and handlers from custom window manager hook
     const {
@@ -43,6 +45,7 @@ function App() {
         { id: 3, name: "Equalizer", icon: equalizericon, onClick: () => openWindow("equalizer") },
         { id: 4, name: "Assistant", icon: aiicon, onClick: () => openWindow("assistant") },
         { id: 5, name: "CMD", icon: cmdicon, onClick: () => openWindow("cmd") },
+        { id: 6, name: "Notepad", icon: notepadicon, onClick: () => openWindow("notepad") },
     ];
 
     return (
@@ -56,6 +59,7 @@ function App() {
                     closeWindow={closeWindow}
                     setDesktopBgColor={setDesktopBgColor}
                     openBgEdit={openBgEdit}
+                    openCalculator={openCalculator}
 
 
                 />

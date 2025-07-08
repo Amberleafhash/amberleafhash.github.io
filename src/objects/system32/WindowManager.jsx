@@ -5,8 +5,10 @@ import Settings from "../Settings/Settings.jsx";
 import Chatbot from "../Custom/Chatbot/Chatbot.jsx";
 import CMD from "../CMD/CMD.jsx"
 import BgEdit from "../system32/BgEdit.jsx"; // make sure the path is correct
+import Calculator from '../system32/Calculator.jsx';
+import Notepad from "../system32/Notepad.jsx"
 
-export default function WindowManager({ windowStates, repoUrl, handleRepoChange, bringToFront, closeWindow, openWindow, setDesktopBgColor, openBgEdit }) {
+export default function WindowManager({ windowStates, repoUrl, handleRepoChange, bringToFront, closeWindow, setDesktopBgColor, openBgEdit, openCalculator }) {
     return (
         <>
             {windowStates.music.isOpen && (
@@ -80,7 +82,7 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     position={windowStates.cmd}
                     zIndex={windowStates.cmd.zIndex}
                 >
-                    <CMD openWindow={openBgEdit} />
+                    <CMD openBgEdit={openBgEdit} openCalculator={openCalculator}/>
 
                 </Menu98>
             )}
@@ -98,6 +100,36 @@ export default function WindowManager({ windowStates, repoUrl, handleRepoChange,
                     zIndex={windowStates.bgedit.zIndex}
                 >
                     <BgEdit setDesktopBgColor={setDesktopBgColor}/>
+                </Menu98>
+            )}
+
+            {windowStates.calculator.isOpen && (
+                <Menu98
+                    id="calculator"
+                    title="Calculator"
+                    width={300}
+                    height={500}
+                    onClose={() => closeWindow("calculator")}
+                    onFocus={() => bringToFront("calculator")}
+                    position={windowStates.calculator}
+                    zIndex={windowStates.calculator.zIndex}
+                >
+                    <Calculator/>
+                </Menu98>
+            )}
+
+            {windowStates.notepad.isOpen && (
+                <Menu98
+                    id="notepad"
+                    title="Notepad"
+                    width={800}
+                    height={500}
+                    onClose={() => closeWindow("notepad")}
+                    onFocus={() => bringToFront("notepad")}
+                    position={windowStates.notepad}
+                    zIndex={windowStates.notepad.zIndex}
+                >
+                    <Notepad/>
                 </Menu98>
             )}
         </>

@@ -3,7 +3,7 @@ import React from 'react';
 import {useState} from "react";
 
 
-const CMD = ({ openWindow }) => {
+const CMD = ({ openBgEdit, openCalculator }) => {
     const [command, setCommand] = useState("");
     const [textColor, setTextColor] = useState("white");
 
@@ -11,13 +11,17 @@ const CMD = ({ openWindow }) => {
         const trimmedCommand = command.trim().toLowerCase();
 
         if (trimmedCommand === "bgedit") {
-            if (openWindow) {
-                openWindow("bgedit");
+            if (openBgEdit) {
+                openBgEdit();
             } else {
                 console.error("openWindow function is not available");
             }
         } else if (trimmedCommand === "color 2") {
             setTextColor("#009500");
+        } else if (trimmedCommand === "color 6") {
+            setTextColor("yellow");
+        } else if (trimmedCommand === "calc") {
+            openCalculator()
         }
     };
 
@@ -37,7 +41,7 @@ const CMD = ({ openWindow }) => {
                 <p>--</p>
             </div>
             <div className="userInput" style={{ color: textColor }}>
-                <p>C:\Users\user0</p>
+                <p>C:\Windows\System32></p>
                 <input
                     placeholder="Enter command"
                     value={command}

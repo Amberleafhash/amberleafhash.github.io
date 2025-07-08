@@ -16,6 +16,8 @@ export default function useWindowManager(initialRepoUrl) {
         assistant: { x: 160, y: 160, zIndex: 4, isOpen: false },
         cmd: { x: 160, y: 160, zIndex: 5, isOpen: false },
         bgedit: { x: 160, y: 160, zIndex: 6, isOpen: false },
+        calculator: { x: 160, y: 160, zIndex: 6, isOpen: false },
+        notepad: { x: 160, y: 160, zIndex: 6, isOpen: false },
     });
 
     // Opens a window by setting isOpen to true and updating its zIndex to topZIndex
