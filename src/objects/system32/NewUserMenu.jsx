@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './NewUserMenu.css';
 import defaultSetup from './img/defaultsetup.png';
 import defaultProfilePic from './img/defaultpfp.png';
-import { checkUsernameExists, createUser } from '..//system32/userService.js';
+import { checkUsernameExists, createUser, loginUser } from './userService.js';
 
 const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const [step, setStep] = useState(0);
@@ -10,32 +10,43 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePic, setProfilePic] = useState(null);
+    const [isExistingUser, setIsExistingUser] = useState(false);
 
-    const handleNext = () => setStep((prev) => Math.min(prev + 1, 2));
-    const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
+    const handleUsernameNext = async () => {
+        const trimmedUsername = username.trim();
+        if (!trimmedUsername) return;
+
+        try {
+            const exists = await checkUsernameExists(trimmedUsername);
+            setIsExistingUser(exists);
+            setStep(1);
+        } catch (error) {
+            alert('Error checking username: ' + error.message);
+        }
+    };
 
     const handleSubmit = async () => {
         const trimmedUsername = username.trim();
 
         try {
-            const exists = await checkUsernameExists(trimmedUsername);
-            if (exists) {
-                alert(`Username "${trimmedUsername}" is already taken. Please choose another.`);
-                return;
+            if (isExistingUser) {
+                const user = await loginUser(trimmedUsername, password);
+                alert(`Welcome back, ${user.username}!`);
+                setActiveUser(user);
+                closeWindow();
+            } else {
+                const user = await createUser({
+                    username: trimmedUsername,
+                    password: String(password),
+                    profilePic: profilePic || defaultProfilePic,
+                });
+
+                alert(`Welcome, ${user.username}! Your account has been created.`);
+                setActiveUser(user);
+                closeWindow();
             }
-
-            const user = await createUser({
-                username: trimmedUsername,
-                password: String(password),
-                profilePic: profilePic || defaultProfilePic,
-            });
-
-            alert(`Welcome, ${user.username}! Your account has been created.`);
-            setActiveUser(user);
-            closeWindow();
         } catch (error) {
-            console.error('Error during user registration:', error.message);
-            alert('Failed to create user. Please try again.');
+            alert('Error: ' + error.message);
         }
     };
 
@@ -44,16 +55,23 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
             case 0:
                 return (
                     <NewUserForm0
-                        onNext={handleNext}
+                        onNext={handleUsernameNext}
                         username={username}
                         setUsername={setUsername}
                     />
                 );
             case 1:
-                return (
+                return isExistingUser ? (
+                    <ExistingUserLoginForm
+                        onBack={() => setStep(0)}
+                        password={password}
+                        setPassword={setPassword}
+                        onSubmit={handleSubmit}
+                    />
+                ) : (
                     <NewUserForm1
-                        onNext={handleNext}
-                        onBack={handleBack}
+                        onNext={() => setStep(2)}
+                        onBack={() => setStep(0)}
                         password={password}
                         confirmPassword={confirmPassword}
                         setPassword={setPassword}
@@ -63,7 +81,7 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
             case 2:
                 return (
                     <NewUserForm2
-                        onBack={handleBack}
+                        onBack={() => setStep(1)}
                         profilePic={profilePic}
                         setProfilePic={setProfilePic}
                         onSubmit={handleSubmit}
@@ -86,9 +104,7 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
 
 const NewUserForm0 = ({ onNext, username, setUsername }) => (
     <div className="NewUserForm">
-        <div className="textbox">
-            <h2>User Information</h2>
-        </div>
+        <div className="textbox"><h2>User Information</h2></div>
         <div className="inputContainer">
             <label htmlFor="username">Username</label>
             <input
@@ -119,30 +135,24 @@ const NewUserForm1 = ({
 
     return (
         <div className="NewUserForm">
-            <div className="textbox">
-                <h2>User Information</h2>
-            </div>
+            <div className="textbox"><h2>Set Password</h2></div>
             <label>Password</label>
             <input
                 type="password"
-                name="password"
-                placeholder="Password (Can be blank)"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
             <label>Confirm Password</label>
             <input
                 type="password"
-                name="confirmPassword"
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
             {!passwordsMatch && <div className="errorMessage">Passwords do not match.</div>}
             <div className="buttonGroup">
-                <button type="button" className="backButton" onClick={onBack}>
-                    Back
-                </button>
+                <button type="button" className="backButton" onClick={onBack}>Back</button>
                 <button type="button" className="nextButton" onClick={onNext} disabled={!passwordsMatch}>
                     Next
                 </button>
@@ -150,6 +160,25 @@ const NewUserForm1 = ({
         </div>
     );
 };
+
+const ExistingUserLoginForm = ({ onBack, password, setPassword, onSubmit }) => (
+    <div className="NewUserForm">
+        <div className="textbox"><h2>Enter Password to Log In</h2></div>
+        <label>Password</label>
+        <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="buttonGroup">
+            <button type="button" className="backButton" onClick={onBack}>Back</button>
+            <button type="button" className="nextButton" onClick={onSubmit} disabled={!password}>
+                Log In
+            </button>
+        </div>
+    </div>
+);
 
 const NewUserForm2 = ({ onBack, profilePic, setProfilePic, onSubmit }) => {
     const fileInputRef = useRef();
@@ -167,9 +196,7 @@ const NewUserForm2 = ({ onBack, profilePic, setProfilePic, onSubmit }) => {
 
     return (
         <div className="NewUserForm">
-            <div className="textbox">
-                <h2>Profile Pic (Optional)</h2>
-            </div>
+            <div className="textbox"><h2>Profile Pic (Optional)</h2></div>
             <div className="profilePicContainer">
                 <img src={profilePic || defaultProfilePic} alt="Profile Preview" />
             </div>
@@ -184,12 +211,8 @@ const NewUserForm2 = ({ onBack, profilePic, setProfilePic, onSubmit }) => {
                 <button type="button" className="standardButton" onClick={() => fileInputRef.current.click()}>
                     Upload
                 </button>
-                <button type="button" className="backButton" onClick={onBack}>
-                    Back
-                </button>
-                <button type="button" className="nextButton" onClick={onSubmit}>
-                    Submit
-                </button>
+                <button type="button" className="backButton" onClick={onBack}>Back</button>
+                <button type="button" className="nextButton" onClick={onSubmit}>Submit</button>
             </div>
         </div>
     );
