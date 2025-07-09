@@ -18,7 +18,7 @@ export default function useWindowManager(initialRepoUrl) {
         bgedit: { x: 160, y: 160, zIndex: 6, isOpen: false },
         calculator: { x: 160, y: 160, zIndex: 6, isOpen: false },
         notepad: { x: 160, y: 160, zIndex: 6, isOpen: false },
-        newusermenu: { x: 160, y: 160, zIndex: 7, isOpen: true },
+        newusermenu: { x: 450, y: 250, zIndex: 7, isOpen: false },
     });
 
     // Opens a window by setting isOpen to true and updating its zIndex to topZIndex

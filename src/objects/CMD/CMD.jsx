@@ -3,7 +3,7 @@ import React from 'react';
 import {useState} from "react";
 
 
-const CMD = ({ openBgEdit, openCalculator }) => {
+const CMD = ({ openBgEdit, openCalculator, openNewUserMenu }) => {
     const [command, setCommand] = useState("");
     const [textColor, setTextColor] = useState("white");
 
@@ -22,6 +22,8 @@ const CMD = ({ openBgEdit, openCalculator }) => {
             setTextColor("yellow");
         } else if (trimmedCommand === "calc") {
             openCalculator()
+        } else if (trimmedCommand === "newuser") {
+            openNewUserMenu();
         }
     };
 

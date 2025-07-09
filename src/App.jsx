@@ -15,12 +15,12 @@ import cmdicon from "./objects/Desktop/img/icons/cmd.png";
 import notepadicon from "./objects/Desktop/img/icons/notepadicon.png";
 import bgediticon from "./objects/Desktop/img/icons/bgediticon.png";
 
+// Supabase client for user data fetching
+import { supabase } from './objects/system32/dbConnect/supabaseClient.js';
+
 function App() {
     const [desktopBgColor, setDesktopBgColor] = useState('#008C8A');
-    const [activeUser, setActiveUser] = useState(""); // <-- Active user state
-
-    const openBgEdit = () => { openWindow("bgedit") };
-    const openCalculator = () => { openWindow("calculator") };
+    const [activeUser, setActiveUser] = useState(null); // { id, username, profile_pic }
 
     const {
         windowStates,
@@ -32,6 +32,12 @@ function App() {
         closeWindow,
     } = useWindowManager('https://api.github.com/repos/amberleafhash/toonStorage/contents/');
 
+    // Openers for certain windows
+    const openBgEdit = () => openWindow("bgedit");
+    const openCalculator = () => openWindow("calculator");
+    const openNewUserMenu = () => openWindow("newusermenu");
+
+    // Program icons with their handlers
     const programIcons = [
         { id: 1, name: "Settings", icon: settingsicon, onClick: () => openWindow("settings"), showOnDesktop: true },
         { id: 2, name: "Music Player", icon: musicplayericon, onClick: () => openWindow("music"), showOnDesktop: true },
@@ -40,16 +46,14 @@ function App() {
         { id: 5, name: "CMD", icon: cmdicon, onClick: () => openWindow("cmd"), showOnDesktop: true },
         { id: 6, name: "Notepad", icon: notepadicon, onClick: () => openWindow("notepad"), showOnDesktop: false },
         { id: 7, name: "BGedit", icon: bgediticon, onClick: () => openWindow("bgedit"), showOnDesktop: false },
+        // { id: 8, name: "New User Setup", icon: settingsicon, onClick: () => openWindow("newusermenu"), showOnDesktop: false },
     ];
 
-    // Generate taskbar items based on open windows
+    // Taskbar items built from open windows
     const taskbarItems = Object.entries(windowStates)
         .filter(([windowId, windowData]) => windowData.isOpen)
         .map(([windowId]) => {
-            const programIcon = programIcons.find(
-                (icon) => icon.name.toLowerCase() === windowId.toLowerCase()
-            );
-
+            const programIcon = programIcons.find(icon => icon.name.toLowerCase() === windowId.toLowerCase());
             return {
                 id: windowId,
                 appTitle: programIcon ? programIcon.name : windowId,
@@ -58,21 +62,55 @@ function App() {
             };
         });
 
+    // Fetch user info from Supabase by user ID
+    const fetchUserInfo = async (userId) => {
+        if (!userId) return null;
+        const { data, error } = await supabase
+            .from('users')
+            .select('id, username, profile_pic')
+            .eq('id', userId)
+            .single();
+
+        if (error) {
+            console.error('Error fetching user info:', error.message);
+            return null;
+        }
+        return data;
+    };
+
+    // Refresh activeUser state after updates like profile or password changes
+    const handleUserUpdate = async () => {
+        if (!activeUser?.id) return;
+        const updatedUser = await fetchUserInfo(activeUser.id);
+        if (updatedUser) setActiveUser(updatedUser);
+    };
+
+    // Pass additional props (like user info and update handler) to specific windows via WindowManager
+    const extraWindowProps = {
+        settings: {
+            userId: activeUser?.id,
+            username: activeUser?.username,
+            profilePic: activeUser?.profile_pic,
+            onUserUpdate: handleUserUpdate,
+        }
+    };
+
     return (
         <DndContext onDragEnd={handleDragEnd}>
             <div className="App">
                 {activeUser && (
                     <div className="welcome-banner" style={{ padding: '8px', color: 'white' }}>
                         Welcome, {activeUser.username}!
-                        {activeUser.profilePic && (
+                        {activeUser.profile_pic && (
                             <img
-                                src={activeUser.profilePic}
+                                src={activeUser.profile_pic}
                                 alt="User Profile"
                                 style={{ width: 30, height: 30, borderRadius: '50%', marginLeft: 10 }}
                             />
                         )}
                     </div>
                 )}
+
                 <WindowManager
                     windowStates={windowStates}
                     repoUrl={repoUrl}
@@ -82,11 +120,16 @@ function App() {
                     setDesktopBgColor={setDesktopBgColor}
                     openBgEdit={openBgEdit}
                     openCalculator={openCalculator}
-                    setActiveUser={setActiveUser} // <-- pass setActiveUser
+                    openNewUserMenu={openNewUserMenu}
+                    setActiveUser={setActiveUser}
+                    activeUser={activeUser}
+                    extraWindowProps={extraWindowProps} // Pass additional props for Settings window
                 />
-                {/* Only show desktop icons marked with showOnDesktop */}
+
+                {/* Show only desktop icons marked with showOnDesktop */}
                 <Desktop icons={programIcons.filter(icon => icon.showOnDesktop)} bgColor={desktopBgColor} />
-                {/* Taskbar gets full list for start menu, etc. */}
+
+                {/* Taskbar with all program icons and open windows */}
                 <Taskbar icons={programIcons} taskbarItems={taskbarItems} windowStates={windowStates} />
             </div>
         </DndContext>

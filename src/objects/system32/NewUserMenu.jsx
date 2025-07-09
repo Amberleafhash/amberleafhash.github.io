@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './NewUserMenu.css';
 import defaultSetup from './img/defaultsetup.png';
 import defaultProfilePic from './img/defaultpfp.png';
-import { supabase } from '../system32/dbConnect/supabaseClient.js';
+import { checkUsernameExists, createUser } from '..//system32/userService.js';
 
 const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const [step, setStep] = useState(0);
@@ -17,46 +17,26 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const handleSubmit = async () => {
         const trimmedUsername = username.trim();
 
-        // 1. Check if username already exists
-        const { data: existingUsers, error: fetchError } = await supabase
-            .from('users')
-            .select('id')
-            .eq('username', trimmedUsername)
-            .limit(1);
+        try {
+            const exists = await checkUsernameExists(trimmedUsername);
+            if (exists) {
+                alert(`Username "${trimmedUsername}" is already taken. Please choose another.`);
+                return;
+            }
 
-        if (fetchError) {
-            console.error('Error checking for existing user:', fetchError.message);
-            alert('Unexpected error. Please try again.');
-            return;
-        }
+            const user = await createUser({
+                username: trimmedUsername,
+                password: String(password),
+                profilePic: profilePic || defaultProfilePic,
+            });
 
-        if (existingUsers && existingUsers.length > 0) {
-            alert(`Username "${trimmedUsername}" is already taken. Please choose another.`);
-            return;
-        }
-
-        // 2. Insert new user
-        const user = {
-            username: trimmedUsername,
-            password: String(password),
-            profile_pic: profilePic || defaultProfilePic,
-        };
-
-        const { data, error } = await supabase
-            .from('users')
-            .insert([user])
-            .select(); // Ensures data is returned
-
-        if (error || !data || data.length === 0) {
-            console.error('Error creating user:', error?.message);
+            alert(`Welcome, ${user.username}! Your account has been created.`);
+            setActiveUser(user);
+            closeWindow();
+        } catch (error) {
+            console.error('Error during user registration:', error.message);
             alert('Failed to create user. Please try again.');
-            return;
         }
-
-        // 3. User successfully created
-        alert(`Welcome, ${data[0].username}! Your account has been created.`);
-        setActiveUser(data[0]);
-        closeWindow();
     };
 
     const renderFormStep = () => {
@@ -158,21 +138,12 @@ const NewUserForm1 = ({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            {!passwordsMatch && (
-                <div className="errorMessage">
-                    Passwords do not match.
-                </div>
-            )}
+            {!passwordsMatch && <div className="errorMessage">Passwords do not match.</div>}
             <div className="buttonGroup">
                 <button type="button" className="backButton" onClick={onBack}>
                     Back
                 </button>
-                <button
-                    type="button"
-                    className="nextButton"
-                    onClick={onNext}
-                    disabled={!passwordsMatch}
-                >
+                <button type="button" className="nextButton" onClick={onNext} disabled={!passwordsMatch}>
                     Next
                 </button>
             </div>
@@ -210,11 +181,7 @@ const NewUserForm2 = ({ onBack, profilePic, setProfilePic, onSubmit }) => {
                 onChange={handleImageChange}
             />
             <div className="buttonGroup">
-                <button
-                    type="button"
-                    className="standardButton"
-                    onClick={() => fileInputRef.current.click()}
-                >
+                <button type="button" className="standardButton" onClick={() => fileInputRef.current.click()}>
                     Upload
                 </button>
                 <button type="button" className="backButton" onClick={onBack}>

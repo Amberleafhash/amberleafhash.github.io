@@ -3,11 +3,11 @@ import Menu98 from '../Menu98/Menu98.jsx';
 import MusicPlayer from '../MusicPlayer/MusicPlayer.jsx';
 import Settings from "../Settings/Settings.jsx";
 import Chatbot from "../Custom/Chatbot/Chatbot.jsx";
-import CMD from "../CMD/CMD.jsx"
+import CMD from "../CMD/CMD.jsx";
 import BgEdit from "../system32/BgEdit.jsx";
 import Calculator from '../system32/Calculator.jsx';
-import Notepad from "../system32/Notepad.jsx"
-import NewUserMenu from "../system32/NewUserMenu.jsx"
+import Notepad from "../system32/Notepad.jsx";
+import NewUserMenu from "../system32/NewUserMenu.jsx";
 
 export default function WindowManager({
                                           windowStates,
@@ -18,7 +18,10 @@ export default function WindowManager({
                                           setDesktopBgColor,
                                           openBgEdit,
                                           openCalculator,
-                                          setActiveUser // <-- receive setActiveUser
+                                          openNewUserMenu,
+                                          setActiveUser,
+                                          activeUser,
+                                          onUserUpdate,  // <-- Added prop here
                                       }) {
     return (
         <>
@@ -41,14 +44,21 @@ export default function WindowManager({
                 <Menu98
                     id="settings"
                     title="Settings"
-                    width={350}
-                    height={100}
+                    width={400}
+                    height={500}
                     onClose={() => closeWindow("settings")}
                     onFocus={() => bringToFront("settings")}
                     position={windowStates.settings}
                     zIndex={windowStates.settings.zIndex}
                 >
-                    <Settings onSubmitRepo={handleRepoChange} />
+                    {/* Pass activeUser data AND onUserUpdate callback to Settings */}
+                    <Settings
+                        onSubmitRepo={handleRepoChange}
+                        username={activeUser?.username}
+                        profilePic={activeUser?.profile_pic || activeUser?.profilePic} // support both keys if any
+                        userId={activeUser?.id}  // pass user ID as well
+                        onUserUpdate={onUserUpdate} // notify App.jsx about changes
+                    />
                 </Menu98>
             )}
 
@@ -93,10 +103,9 @@ export default function WindowManager({
                     position={windowStates.cmd}
                     zIndex={windowStates.cmd.zIndex}
                 >
-                    <CMD openBgEdit={openBgEdit} openCalculator={openCalculator} />
+                    <CMD openBgEdit={openBgEdit} openCalculator={openCalculator} openNewUserMenu={openNewUserMenu}/>
                 </Menu98>
             )}
-
 
             {windowStates.bgedit.isOpen && (
                 <Menu98

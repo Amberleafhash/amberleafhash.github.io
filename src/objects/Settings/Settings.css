@@ -1,28 +1,26 @@
 .Settings {
     display: flex;
-    align-items: center; /* Vertically center items */
-    justify-content: center;
-    gap: 10px; /* Space between input and button */
+    flex-direction: column;
     width: 100%; height: 100%;
     /*background: red;*/
 }
-
-.settings-input {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    width: 200px;
+.Settings .userbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    /*background: red;*/
 }
-
-.settings-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #00007f; /* Blue color for button */
-    border: none;
-    cursor: pointer;
+.Settings img {
+    width: 100px; height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
 }
-
-.settings-button:hover {
-    background-color: #1010a3; /* Darker blue on hover */
+.Settings .settingsOptions {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: auto; margin-right: auto;
 }
