@@ -2,10 +2,11 @@ import React, { useState, useRef } from 'react';
 import './NewUserMenu.css';
 import defaultSetup from './img/defaultsetup.png';
 import defaultProfilePic from './img/defaultpfp.png';
+import { supabase } from '../system32/dbConnect/supabaseClient.js';
 
 const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const [step, setStep] = useState(0);
-    const [username, setUsername] = useState('win98user');  // Default username changed here
+    const [username, setUsername] = useState('win98user');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePic, setProfilePic] = useState(null);
@@ -13,16 +14,49 @@ const NewUserMenu = ({ setActiveUser, closeWindow }) => {
     const handleNext = () => setStep((prev) => Math.min(prev + 1, 2));
     const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        const trimmedUsername = username.trim();
+
+        // 1. Check if username already exists
+        const { data: existingUsers, error: fetchError } = await supabase
+            .from('users')
+            .select('id')
+            .eq('username', trimmedUsername)
+            .limit(1);
+
+        if (fetchError) {
+            console.error('Error checking for existing user:', fetchError.message);
+            alert('Unexpected error. Please try again.');
+            return;
+        }
+
+        if (existingUsers && existingUsers.length > 0) {
+            alert(`Username "${trimmedUsername}" is already taken. Please choose another.`);
+            return;
+        }
+
+        // 2. Insert new user
         const user = {
-            username: String(username),
+            username: trimmedUsername,
             password: String(password),
-            profilePic: profilePic || defaultProfilePic,  // Default to imported defaultProfilePic
+            profile_pic: profilePic || defaultProfilePic,
         };
-        // ADD SHIT HERE
-        console.log('New user created:', user);
-        setActiveUser(user); // Set the active user in App state
-        closeWindow();       // Close the NewUserMenu window
+
+        const { data, error } = await supabase
+            .from('users')
+            .insert([user])
+            .select(); // Ensures data is returned
+
+        if (error || !data || data.length === 0) {
+            console.error('Error creating user:', error?.message);
+            alert('Failed to create user. Please try again.');
+            return;
+        }
+
+        // 3. User successfully created
+        alert(`Welcome, ${data[0].username}! Your account has been created.`);
+        setActiveUser(data[0]);
+        closeWindow();
     };
 
     const renderFormStep = () => {

@@ -18,6 +18,7 @@
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@langchain/ollama": "^0.2.0",
+    "@supabase/supabase-js": "^2.50.3",
     "jsmediatags": "^3.9.7",
     "langchain": "^0.3.19",
     "mathjs": "^14.5.3",
