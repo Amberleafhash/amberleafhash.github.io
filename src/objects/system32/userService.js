@@ -1,5 +1,18 @@
 import { supabase } from './dbConnect/supabaseClient.js';
 
+export async function updateMinesweeperHighScore(userId, score) {
+    const { data, error } = await supabase
+        .from('users')
+        .update({ minesweeper_high_score: score })
+        .eq('id', userId);
+
+    if (error) {
+        console.error('Error updating minesweeper high score:', error);
+        throw error;
+    }
+    return data;
+}
+
 export async function uploadProfilePic(base64Image, username) {
     if (!base64Image.startsWith('data:image')) return base64Image;
 
@@ -89,3 +102,4 @@ export const updateProfilePic = async (userId, file, username) => {
     if (error) throw new Error('Profile pic update failed: ' + error.message);
     return data;
 };
+

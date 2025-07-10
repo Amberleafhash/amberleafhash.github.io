@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Minesweeper.css';
+import { supabase } from "/src/objects/system32/dbConnect/supabaseClient.js";
+import { updateMinesweeperHighScore } from '/src/objects/system32/userService.js';
 
 const ROWS = 9;
-const COLS = 9;
+const COLS = 10;
 const MINES = 10;
 
 const createEmptyBoard = () => {
@@ -32,8 +34,8 @@ const placeMines = (board) => {
 const calculateAdjacents = (board) => {
     const directions = [
         [-1, -1], [-1, 0], [-1, 1],
-        [ 0, -1],          [ 0, 1],
-        [ 1, -1], [ 1, 0], [ 1, 1],
+        [0, -1],          [0, 1],
+        [1, -1], [1, 0], [1, 1],
     ];
 
     for (let row = 0; row < ROWS; row++) {
@@ -55,7 +57,6 @@ const calculateAdjacents = (board) => {
             board[row][col].adjacentMines = count;
         }
     }
-
     return board;
 };
 
@@ -73,8 +74,8 @@ const revealAndScore = (board, row, col, visited = {}, pointsRef = { points: 0 }
     if (cell.adjacentMines === 0) {
         const directions = [
             [-1, -1], [-1, 0], [-1, 1],
-            [ 0, -1],          [ 0, 1],
-            [ 1, -1], [ 1, 0], [ 1, 1],
+            [0, -1],          [0, 1],
+            [1, -1], [1, 0], [1, 1],
         ];
         for (const [dx, dy] of directions) {
             const newRow = row + dx;
@@ -89,11 +90,31 @@ const revealAndScore = (board, row, col, visited = {}, pointsRef = { points: 0 }
     }
 };
 
-const Minesweeper = () => {
+const Minesweeper = ({ userId }) => {
     const [board, setBoard] = useState([]);
     const [gameOver, setGameOver] = useState(false);
     const [win, setWin] = useState(false);
     const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState(0);
+
+    useEffect(() => {
+        if (!userId) return;
+        const fetchHighScore = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('minesweeper_high_score')
+                    .eq('id', userId)
+                    .single();
+                if (!error && data) {
+                    setHighScore(data.minesweeper_high_score || 0);
+                }
+            } catch (e) {
+                console.error('Failed to fetch high score', e);
+            }
+        };
+        fetchHighScore();
+    }, [userId]);
 
     const initializeGame = () => {
         const newBoard = calculateAdjacents(placeMines(createEmptyBoard()));
@@ -107,6 +128,18 @@ const Minesweeper = () => {
         initializeGame();
     }, []);
 
+    const handleGameEnd = async (finalScore) => {
+        if (!userId) return;
+        if (finalScore > highScore) {
+            try {
+                await updateMinesweeperHighScore(userId, finalScore);
+                setHighScore(finalScore);
+            } catch (error) {
+                console.error('Failed to update high score:', error);
+            }
+        }
+    };
+
     const handleLeftClick = (row, col) => {
         if (gameOver || win) return;
 
@@ -119,6 +152,7 @@ const Minesweeper = () => {
             cell.revealed = true;
             setBoard(newBoard);
             setGameOver(true);
+            handleGameEnd(score);
             return;
         }
 
@@ -126,9 +160,13 @@ const Minesweeper = () => {
         revealAndScore(newBoard, row, col, {}, pointsRef);
 
         setBoard(newBoard);
-        setScore(prevScore => prevScore + pointsRef.points);
+        const newScore = score + pointsRef.points;
+        setScore(newScore);
 
-        checkWin(newBoard);
+        if (checkWin(newBoard)) {
+            setWin(true);
+            handleGameEnd(newScore);
+        }
     };
 
     const handleRightClick = (e, row, col) => {
@@ -161,47 +199,68 @@ const Minesweeper = () => {
             });
         });
 
-        if (
-            revealedCount + MINES === ROWS * COLS ||
-            correctFlags === MINES
-        ) {
+        const won = (revealedCount + MINES === ROWS * COLS) || (correctFlags === MINES);
+        if (won) {
             setWin(true);
         }
+        return won;
     };
 
     const renderCell = (cell, row, col) => {
-        let content = '';
+        let display = '';
         if (cell.revealed) {
-            content = cell.isMine ? '💣' : (cell.adjacentMines || '');
+            if (cell.isMine) {
+                display = '☼';  // classic Win98 mine symbol
+            } else if (cell.adjacentMines > 0) {
+                display = cell.adjacentMines;
+            }
         } else if (cell.flagged) {
-            content = '🚩';
+            display = '⚑';  // red flag
         }
+
+        const classNames = ['cell'];
+        if (cell.revealed) classNames.push('revealed');
+        if (cell.flagged) classNames.push('flagged');
+        if (gameOver && cell.isMine) classNames.push('mine');
 
         return (
             <div
                 key={`${row}-${col}`}
-                className={`cell ${cell.revealed ? 'revealed' : ''} ${gameOver && cell.isMine ? 'mine' : ''}`}
+                className={classNames.join(' ')}
+                data-adjacent={cell.revealed ? cell.adjacentMines : 0}
                 onClick={() => handleLeftClick(row, col)}
                 onContextMenu={(e) => handleRightClick(e, row, col)}
-                data-adjacent={cell.adjacentMines}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleLeftClick(row, col);
+                }}
+                aria-label={`Cell at row ${row + 1}, column ${col + 1} ${cell.revealed ? (cell.isMine ? 'Mine' : `${cell.adjacentMines} adjacent mines`) : (cell.flagged ? 'Flagged' : 'Hidden')}`}
             >
-                {content}
+                {display}
             </div>
         );
     };
 
     return (
-        <div className="minesweeper">
-            <button onClick={initializeGame} className="reset-button">
-                {gameOver ? '💣' : '😄'}
-            </button>
-            <h2>{gameOver ? '💥 Game Over!' : win ? '🎉 You Win!' : 'Minesweeper'}</h2>
-            <div className="grid">
-                {board.map((row, rIdx) =>
-                    row.map((cell, cIdx) => renderCell(cell, rIdx, cIdx))
+        <div className="minesweeper-wrapper">
+            <div className="info-bar">
+                <button onClick={initializeGame}>Restart</button>
+                <div>Score: {score}</div>
+                <div>High Score: {highScore}</div>
+                <div>Status: {gameOver ? 'Game Over' : win ? 'You Win!' : 'Playing'}</div>
+            </div>
+            <div
+                className="minesweeper-grid"
+                style={{
+                    gridTemplateColumns: `repeat(${COLS}, 22px)`,
+                    gridTemplateRows: `repeat(${ROWS}, 22px)`,
+                }}
+            >
+                {board.map((row, i) =>
+                    row.map((cell, j) => renderCell(cell, i, j))
                 )}
             </div>
-            <h3>Score: {score}</h3>
         </div>
     );
 };

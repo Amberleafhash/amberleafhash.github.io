@@ -115,6 +115,7 @@ function App() {
                     setActiveUser={setActiveUser}
                     activeUser={activeUser}
                     onUserUpdate={handleUserUpdate}
+                    userId={activeUser?.id}  // Pass userId here for convenience
                 />
 
                 <Desktop
