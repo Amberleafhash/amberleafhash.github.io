@@ -1,0 +1,113 @@
+body {
+    background-color: #c0c0c0;
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    padding: 30px;
+}
+
+.minesweeper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #c0c0c0;
+    padding: 8px;
+    border: 3px solid #fff;
+    box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
+    width:auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #c0c0c0;
+    border: 2px solid #808080;
+    box-shadow: inset -2px -2px #fff, inset 2px 2px #404040;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+}
+
+.counter,
+.timer {
+    background-color: black;
+    color: red;
+    font-family: 'Digital-7 Mono', 'Courier New', monospace;
+    font-size: 22px;
+    width: 54px;
+    text-align: center;
+    padding: 4px 6px;
+    border: 2px inset #808080;
+    box-shadow: inset 1px 1px 1px #202020;
+}
+
+.smiley {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    background-color: #c0c0c0;
+    border: 2px outset #fff;
+    box-shadow: inset -1px -1px #fff, inset 1px 1px #404040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 4px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, 24px);
+    grid-template-rows: repeat(9, 24px);
+    background-color: #808080;
+    padding: 6px;
+    border: 2px solid #fff;
+    box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
+    gap: 1px;
+}
+
+.cell {
+    width: 24px;
+    height: 24px;
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #404040;
+    border-right: 2px solid #404040;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 22px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cell.revealed {
+    background-color: #d4d0c8;
+    border: 1px solid #808080;
+    box-shadow: inset 1px 1px #ffffff;
+    cursor: default;
+}
+
+.cell.revealed:not(.mine):not(.flagged) {
+    color: #000080;
+}
+
+.cell.mine {
+    background-color: #ffcccc;
+    color: red;
+}
+
+.cell.flagged {
+    color: red;
+}
+
+/* Optional extras for extra polish */
+.cell.revealed[data-adjacent='1'] { color: blue; }
+.cell.revealed[data-adjacent='2'] { color: green; }
+.cell.revealed[data-adjacent='3'] { color: red; }
+.cell.revealed[data-adjacent='4'] { color: navy; }
+.cell.revealed[data-adjacent='5'] { color: maroon; }
+.cell.revealed[data-adjacent='6'] { color: teal; }
+.cell.revealed[data-adjacent='7'] { color: black; }
+.cell.revealed[data-adjacent='8'] { color: gray; }

@@ -8,6 +8,7 @@ import BgEdit from "../system32/BgEdit.jsx";
 import Calculator from '../system32/Calculator.jsx';
 import Notepad from "../system32/Notepad.jsx";
 import NewUserMenu from "../system32/NewUserMenu.jsx";
+import Minesweeper from "../Custom/Minesweeper/Minesweeper.jsx";
 
 export default function WindowManager({
                                           windowStates,
@@ -23,6 +24,7 @@ export default function WindowManager({
                                           activeUser,
                                           onUserUpdate,  // <-- Added prop here
                                       }) {
+
     return (
         <>
             {windowStates.music.isOpen && (
@@ -169,6 +171,22 @@ export default function WindowManager({
                     />
                 </Menu98>
             )}
+
+            {windowStates.minesweeper?.isOpen && (
+                <Menu98
+                    id="minesweeper"
+                    title="Minesweeper"
+                    width={285}
+                    height={500}
+                    onClose={() => closeWindow("minesweeper")}
+                    onFocus={() => bringToFront("minesweeper")}
+                    position={windowStates.minesweeper}
+                    zIndex={windowStates.minesweeper.zIndex}
+                >
+                    <Minesweeper />
+                </Menu98>
+            )}
+
         </>
     );
 }

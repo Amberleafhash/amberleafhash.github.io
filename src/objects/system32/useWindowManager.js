@@ -19,6 +19,7 @@ export default function useWindowManager(initialRepoUrl) {
         calculator: { x: 160, y: 160, zIndex: 6, isOpen: false },
         notepad: { x: 160, y: 160, zIndex: 6, isOpen: false },
         newusermenu: { x: 450, y: 250, zIndex: 7, isOpen: true },
+        minesweeper: { x: 100, y: 100, zIndex: 8, isOpen: true },
     });
 
     // Opens a window by setting isOpen to true and updating its zIndex to topZIndex

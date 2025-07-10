@@ -14,6 +14,7 @@ import aiicon from "./objects/Desktop/img/icons/aiicon.png";
 import cmdicon from "./objects/Desktop/img/icons/cmd.png";
 import notepadicon from "./objects/Desktop/img/icons/notepadicon.png";
 import bgediticon from "./objects/Desktop/img/icons/bgediticon.png";
+import minesweepericon from "./objects/Custom/Minesweeper/img/minesweepericon.png";
 
 // Supabase client for user data fetching
 import { supabase } from './objects/system32/dbConnect/supabaseClient.js';
@@ -32,12 +33,12 @@ function App() {
         closeWindow,
     } = useWindowManager('https://api.github.com/repos/amberleafhash/toonStorage/contents/');
 
-    // Openers for certain windows
+    // Openers for specific system windows
     const openBgEdit = () => openWindow("bgedit");
     const openCalculator = () => openWindow("calculator");
     const openNewUserMenu = () => openWindow("newusermenu");
 
-    // Program icons with their handlers
+    // Program icons and click handlers
     const programIcons = [
         { id: 1, name: "Settings", icon: settingsicon, onClick: () => openWindow("settings"), showOnDesktop: true },
         { id: 2, name: "Music Player", icon: musicplayericon, onClick: () => openWindow("music"), showOnDesktop: true },
@@ -46,12 +47,12 @@ function App() {
         { id: 5, name: "CMD", icon: cmdicon, onClick: () => openWindow("cmd"), showOnDesktop: true },
         { id: 6, name: "Notepad", icon: notepadicon, onClick: () => openWindow("notepad"), showOnDesktop: false },
         { id: 7, name: "BGedit", icon: bgediticon, onClick: () => openWindow("bgedit"), showOnDesktop: false },
-        // { id: 8, name: "New User Setup", icon: settingsicon, onClick: () => openWindow("newusermenu"), showOnDesktop: false },
+        { id: 9, name: "Minesweeper", icon: minesweepericon, onClick: () => openWindow("minesweeper"), showOnDesktop: true },
     ];
 
-    // Taskbar items built from open windows
+    // Taskbar items from open windows
     const taskbarItems = Object.entries(windowStates)
-        .filter(([windowId, windowData]) => windowData.isOpen)
+        .filter(([_, windowData]) => windowData?.isOpen)
         .map(([windowId]) => {
             const programIcon = programIcons.find(icon => icon.name.toLowerCase() === windowId.toLowerCase());
             return {
@@ -62,7 +63,7 @@ function App() {
             };
         });
 
-    // Fetch user info from Supabase by user ID
+    // Fetch user info from Supabase
     const fetchUserInfo = async (userId) => {
         if (!userId) return null;
         const { data, error } = await supabase
@@ -78,21 +79,11 @@ function App() {
         return data;
     };
 
-    // Refresh activeUser state after updates like profile or password changes
+    // Update activeUser from DB
     const handleUserUpdate = async () => {
         if (!activeUser?.id) return;
         const updatedUser = await fetchUserInfo(activeUser.id);
         if (updatedUser) setActiveUser(updatedUser);
-    };
-
-    // Pass additional props (like user info and update handler) to specific windows via WindowManager
-    const extraWindowProps = {
-        settings: {
-            userId: activeUser?.id,
-            username: activeUser?.username,
-            profilePic: activeUser?.profile_pic,
-            onUserUpdate: handleUserUpdate,
-        }
     };
 
     return (
@@ -123,14 +114,19 @@ function App() {
                     openNewUserMenu={openNewUserMenu}
                     setActiveUser={setActiveUser}
                     activeUser={activeUser}
-                    extraWindowProps={extraWindowProps} // Pass additional props for Settings window
+                    onUserUpdate={handleUserUpdate}
                 />
 
-                {/* Show only desktop icons marked with showOnDesktop */}
-                <Desktop icons={programIcons.filter(icon => icon.showOnDesktop)} bgColor={desktopBgColor} />
+                <Desktop
+                    icons={programIcons.filter(icon => icon.showOnDesktop)}
+                    bgColor={desktopBgColor}
+                />
 
-                {/* Taskbar with all program icons and open windows */}
-                <Taskbar icons={programIcons} taskbarItems={taskbarItems} windowStates={windowStates} />
+                <Taskbar
+                    icons={programIcons}
+                    taskbarItems={taskbarItems}
+                    windowStates={windowStates}
+                />
             </div>
         </DndContext>
     );
