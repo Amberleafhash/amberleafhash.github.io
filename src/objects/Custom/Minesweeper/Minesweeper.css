@@ -1,7 +1,32 @@
 body {
     background-color: #c0c0c0;
     font-family: 'MS Sans Serif', Tahoma, sans-serif;
+}
 
+.reset-button {
+    margin-bottom: 15px; margin-top: 25px;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    background: linear-gradient(145deg, #f0f0f0, #cacaca);
+    border: 2px solid #999;
+    border-radius: 8px;
+    box-shadow: 3px 3px 5px #b8b8b8, -3px -3px 5px #ffffff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reset-button:hover {
+    background: linear-gradient(145deg, #e6e6e6, #b8b8b8);
+    transform: scale(1.05);
+}
+
+.reset-button:active {
+    box-shadow: inset 3px 3px 5px #b8b8b8, inset -3px -3px 5px #ffffff;
+    transform: scale(0.95);
 }
 
 .minesweeper {
@@ -12,7 +37,7 @@ body {
     padding: 8px;
     border: 3px solid #fff;
     box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
-    width:auto;
+    width: auto;
 }
 
 .header {

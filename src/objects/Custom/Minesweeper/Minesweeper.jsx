@@ -5,7 +5,6 @@ const ROWS = 9;
 const COLS = 9;
 const MINES = 10;
 
-// Creates an empty board with default cell properties
 const createEmptyBoard = () => {
     return Array.from({ length: ROWS }, () =>
         Array.from({ length: COLS }, () => ({
@@ -17,7 +16,6 @@ const createEmptyBoard = () => {
     );
 };
 
-// Randomly places MINES number of mines on the board
 const placeMines = (board) => {
     let minesPlaced = 0;
     while (minesPlaced < MINES) {
@@ -31,7 +29,6 @@ const placeMines = (board) => {
     return board;
 };
 
-// Calculates the number of adjacent mines for each cell
 const calculateAdjacents = (board) => {
     const directions = [
         [-1, -1], [-1, 0], [-1, 1],
@@ -62,8 +59,6 @@ const calculateAdjacents = (board) => {
     return board;
 };
 
-// Recursively reveals empty cells and adjacent cells with zero adjacent mines
-// Also tracks how many cells are revealed for scoring
 const revealAndScore = (board, row, col, visited = {}, pointsRef = { points: 0 }) => {
     const key = `${row},${col}`;
     if (visited[key]) return;
@@ -100,24 +95,26 @@ const Minesweeper = () => {
     const [win, setWin] = useState(false);
     const [score, setScore] = useState(0);
 
-    // Initialize the board once on component mount
-    useEffect(() => {
+    const initializeGame = () => {
         const newBoard = calculateAdjacents(placeMines(createEmptyBoard()));
         setBoard(newBoard);
+        setGameOver(false);
+        setWin(false);
+        setScore(0);
+    };
+
+    useEffect(() => {
+        initializeGame();
     }, []);
 
-    // Handle left click on a cell to reveal it
     const handleLeftClick = (row, col) => {
         if (gameOver || win) return;
 
-        // Deep copy board to avoid mutating state directly
         const newBoard = board.map(row => row.map(cell => ({ ...cell })));
         const cell = newBoard[row][col];
 
-        // Ignore clicks on flagged or already revealed cells
         if (cell.flagged || cell.revealed) return;
 
-        // If clicked on a mine, reveal it and end the game
         if (cell.isMine) {
             cell.revealed = true;
             setBoard(newBoard);
@@ -125,7 +122,6 @@ const Minesweeper = () => {
             return;
         }
 
-        // Reveal empty cells recursively and track score points
         const pointsRef = { points: 0 };
         revealAndScore(newBoard, row, col, {}, pointsRef);
 
@@ -135,24 +131,17 @@ const Minesweeper = () => {
         checkWin(newBoard);
     };
 
-    // Handle right click on a cell to toggle flag
     const handleRightClick = (e, row, col) => {
         e.preventDefault();
         if (gameOver || win) return;
 
-        // Deep copy board
         const newBoard = board.map(row => row.map(cell => ({ ...cell })));
         const cell = newBoard[row][col];
 
-        // Can't flag revealed cells
         if (cell.revealed) return;
 
-        // Toggle flag
         cell.flagged = !cell.flagged;
 
-        // Optional: Update score for correct flags
-        // Increase score by 1 if flag placed on a mine
-        // Decrease score by 1 if flag removed from a mine
         if (cell.isMine) {
             setScore(prevScore => prevScore + (cell.flagged ? 1 : -1));
         }
@@ -161,7 +150,6 @@ const Minesweeper = () => {
         checkWin(newBoard);
     };
 
-    // Check if the player has won
     const checkWin = (board) => {
         let revealedCount = 0;
         let correctFlags = 0;
@@ -173,7 +161,6 @@ const Minesweeper = () => {
             });
         });
 
-        // Win condition: all non-mine cells revealed or all mines flagged correctly
         if (
             revealedCount + MINES === ROWS * COLS ||
             correctFlags === MINES
@@ -182,7 +169,6 @@ const Minesweeper = () => {
         }
     };
 
-    // Render individual cells
     const renderCell = (cell, row, col) => {
         let content = '';
         if (cell.revealed) {
@@ -197,6 +183,7 @@ const Minesweeper = () => {
                 className={`cell ${cell.revealed ? 'revealed' : ''} ${gameOver && cell.isMine ? 'mine' : ''}`}
                 onClick={() => handleLeftClick(row, col)}
                 onContextMenu={(e) => handleRightClick(e, row, col)}
+                data-adjacent={cell.adjacentMines}
             >
                 {content}
             </div>
@@ -205,14 +192,16 @@ const Minesweeper = () => {
 
     return (
         <div className="minesweeper">
+            <button onClick={initializeGame} className="reset-button">
+                {gameOver ? '💣' : '😄'}
+            </button>
             <h2>{gameOver ? '💥 Game Over!' : win ? '🎉 You Win!' : 'Minesweeper'}</h2>
-            {/* Display current score */}
-            <h3>Score: {score}</h3>
             <div className="grid">
                 {board.map((row, rIdx) =>
                     row.map((cell, cIdx) => renderCell(cell, rIdx, cIdx))
                 )}
             </div>
+            <h3>Score: {score}</h3>
         </div>
     );
 };
