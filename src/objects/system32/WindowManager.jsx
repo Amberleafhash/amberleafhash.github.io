@@ -177,7 +177,7 @@ export default function WindowManager({
                     id="minesweeper"
                     title="Minesweeper"
                     width={285}
-                    height={500}
+                    height={325}
                     onClose={() => closeWindow("minesweeper")}
                     onFocus={() => bringToFront("minesweeper")}
                     position={windowStates.minesweeper}

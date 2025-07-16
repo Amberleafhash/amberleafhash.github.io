@@ -96,6 +96,7 @@ const Minesweeper = ({ userId }) => {
     const [win, setWin] = useState(false);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
+    const [firstClick, setFirstClick] = useState(true);
 
     useEffect(() => {
         if (!userId) return;
@@ -116,12 +117,20 @@ const Minesweeper = ({ userId }) => {
         fetchHighScore();
     }, [userId]);
 
-    const initializeGame = () => {
-        const newBoard = calculateAdjacents(placeMines(createEmptyBoard()));
+    const initializeGame = (safeRow = null, safeCol = null) => {
+        let newBoard;
+        do {
+            newBoard = calculateAdjacents(placeMines(createEmptyBoard()));
+        } while (
+            safeRow !== null &&
+            safeCol !== null &&
+            newBoard[safeRow][safeCol].isMine
+            );
         setBoard(newBoard);
         setGameOver(false);
         setWin(false);
         setScore(0);
+        setFirstClick(false);
     };
 
     useEffect(() => {
@@ -143,6 +152,11 @@ const Minesweeper = ({ userId }) => {
     const handleLeftClick = (row, col) => {
         if (gameOver || win) return;
 
+        if (firstClick) {
+            initializeGame(row, col);
+            return;
+        }
+
         const newBoard = board.map(row => row.map(cell => ({ ...cell })));
         const cell = newBoard[row][col];
 
@@ -150,6 +164,12 @@ const Minesweeper = ({ userId }) => {
 
         if (cell.isMine) {
             cell.revealed = true;
+            for (let i = 0; i < ROWS; i++) {
+                for (let j = 0; j < COLS; j++) {
+                    const c = newBoard[i][j];
+                    if (c.isMine) c.revealed = true;
+                }
+            }
             setBoard(newBoard);
             setGameOver(true);
             handleGameEnd(score);
@@ -245,7 +265,7 @@ const Minesweeper = ({ userId }) => {
     return (
         <div className="minesweeper-wrapper">
             <div className="info-bar">
-                <button onClick={initializeGame}>Restart</button>
+                <button onClick={() => initializeGame()}>Restart</button>
                 <div>Score: {score}</div>
                 <div>High Score: {highScore}</div>
                 <div>Status: {gameOver ? 'Game Over' : win ? 'You Win!' : 'Playing'}</div>
