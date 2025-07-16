@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './Minesweeper.css';
-import { supabase } from "/src/objects/system32/dbConnect/supabaseClient.js";
-import { updateMinesweeperHighScore } from '/src/objects/system32/userService.js';
 
 const ROWS = 9;
 const COLS = 10;
 const MINES = 10;
+const LOCAL_HS_KEY = "minesweeperHighScore";
 
-const createEmptyBoard = () => {
-    return Array.from({ length: ROWS }, () =>
+const directions = [
+    [-1, -1], [-1, 0], [-1, 1],
+    [0, -1],          [0, 1],
+    [1, -1], [1, 0], [1, 1],
+];
+
+const createEmptyBoard = () =>
+    Array.from({ length: ROWS }, () =>
         Array.from({ length: COLS }, () => ({
             isMine: false,
             revealed: false,
@@ -16,7 +21,6 @@ const createEmptyBoard = () => {
             adjacentMines: 0,
         }))
     );
-};
 
 const placeMines = (board) => {
     let minesPlaced = 0;
@@ -32,12 +36,6 @@ const placeMines = (board) => {
 };
 
 const calculateAdjacents = (board) => {
-    const directions = [
-        [-1, -1], [-1, 0], [-1, 1],
-        [0, -1],          [0, 1],
-        [1, -1], [1, 0], [1, 1],
-    ];
-
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
             if (board[row][col].isMine) continue;
@@ -72,11 +70,6 @@ const revealAndScore = (board, row, col, visited = {}, pointsRef = { points: 0 }
     pointsRef.points += 1;
 
     if (cell.adjacentMines === 0) {
-        const directions = [
-            [-1, -1], [-1, 0], [-1, 1],
-            [0, -1],          [0, 1],
-            [1, -1], [1, 0], [1, 1],
-        ];
         for (const [dx, dy] of directions) {
             const newRow = row + dx;
             const newCol = col + dy;
@@ -90,7 +83,10 @@ const revealAndScore = (board, row, col, visited = {}, pointsRef = { points: 0 }
     }
 };
 
-const Minesweeper = ({ userId }) => {
+const deepCopyBoard = (board) =>
+    board.map(row => row.map(cell => ({ ...cell })));
+
+const Minesweeper = () => {
     const [board, setBoard] = useState([]);
     const [gameOver, setGameOver] = useState(false);
     const [win, setWin] = useState(false);
@@ -99,23 +95,11 @@ const Minesweeper = ({ userId }) => {
     const [firstClick, setFirstClick] = useState(true);
 
     useEffect(() => {
-        if (!userId) return;
-        const fetchHighScore = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('minesweeper_high_score')
-                    .eq('id', userId)
-                    .single();
-                if (!error && data) {
-                    setHighScore(data.minesweeper_high_score || 0);
-                }
-            } catch (e) {
-                console.error('Failed to fetch high score', e);
-            }
-        };
-        fetchHighScore();
-    }, [userId]);
+        const savedScore = parseInt(localStorage.getItem(LOCAL_HS_KEY), 10);
+        if (!isNaN(savedScore)) {
+            setHighScore(savedScore);
+        }
+    }, []);
 
     const initializeGame = (safeRow = null, safeCol = null) => {
         let newBoard;
@@ -137,15 +121,11 @@ const Minesweeper = ({ userId }) => {
         initializeGame();
     }, []);
 
-    const handleGameEnd = async (finalScore) => {
-        if (!userId) return;
-        if (finalScore > highScore) {
-            try {
-                await updateMinesweeperHighScore(userId, finalScore);
-                setHighScore(finalScore);
-            } catch (error) {
-                console.error('Failed to update high score:', error);
-            }
+    const handleGameEnd = (finalScore) => {
+        const savedScore = parseInt(localStorage.getItem(LOCAL_HS_KEY), 10) || 0;
+        if (finalScore > savedScore) {
+            localStorage.setItem(LOCAL_HS_KEY, finalScore);
+            setHighScore(finalScore);
         }
     };
 
@@ -157,7 +137,7 @@ const Minesweeper = ({ userId }) => {
             return;
         }
 
-        const newBoard = board.map(row => row.map(cell => ({ ...cell })));
+        const newBoard = deepCopyBoard(board);
         const cell = newBoard[row][col];
 
         if (cell.flagged || cell.revealed) return;
@@ -166,8 +146,7 @@ const Minesweeper = ({ userId }) => {
             cell.revealed = true;
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLS; j++) {
-                    const c = newBoard[i][j];
-                    if (c.isMine) c.revealed = true;
+                    if (newBoard[i][j].isMine) newBoard[i][j].revealed = true;
                 }
             }
             setBoard(newBoard);
@@ -179,8 +158,8 @@ const Minesweeper = ({ userId }) => {
         const pointsRef = { points: 0 };
         revealAndScore(newBoard, row, col, {}, pointsRef);
 
-        setBoard(newBoard);
         const newScore = score + pointsRef.points;
+        setBoard(newBoard);
         setScore(newScore);
 
         if (checkWin(newBoard)) {
@@ -193,7 +172,7 @@ const Minesweeper = ({ userId }) => {
         e.preventDefault();
         if (gameOver || win) return;
 
-        const newBoard = board.map(row => row.map(cell => ({ ...cell })));
+        const newBoard = deepCopyBoard(board);
         const cell = newBoard[row][col];
 
         if (cell.revealed) return;
@@ -201,7 +180,7 @@ const Minesweeper = ({ userId }) => {
         cell.flagged = !cell.flagged;
 
         if (cell.isMine) {
-            setScore(prevScore => prevScore + (cell.flagged ? 1 : -1));
+            setScore(prev => prev + (cell.flagged ? 1 : -1));
         }
 
         setBoard(newBoard);
@@ -209,33 +188,28 @@ const Minesweeper = ({ userId }) => {
     };
 
     const checkWin = (board) => {
-        let revealedCount = 0;
+        let revealed = 0;
         let correctFlags = 0;
 
-        board.forEach(row => {
-            row.forEach(cell => {
-                if (cell.revealed) revealedCount++;
+        for (const row of board) {
+            for (const cell of row) {
+                if (cell.revealed) revealed++;
                 if (cell.flagged && cell.isMine) correctFlags++;
-            });
-        });
-
-        const won = (revealedCount + MINES === ROWS * COLS) || (correctFlags === MINES);
-        if (won) {
-            setWin(true);
+            }
         }
+
+        const won = (revealed + MINES === ROWS * COLS) || (correctFlags === MINES);
+        if (won) setWin(true);
         return won;
     };
 
     const renderCell = (cell, row, col) => {
         let display = '';
         if (cell.revealed) {
-            if (cell.isMine) {
-                display = '☼';  // classic Win98 mine symbol
-            } else if (cell.adjacentMines > 0) {
-                display = cell.adjacentMines;
-            }
+            if (cell.isMine) display = '☼';
+            else if (cell.adjacentMines > 0) display = cell.adjacentMines;
         } else if (cell.flagged) {
-            display = '⚑';  // red flag
+            display = '⚑';
         }
 
         const classNames = ['cell'];

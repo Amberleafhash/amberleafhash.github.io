@@ -13,6 +13,7 @@ export async function updateMinesweeperHighScore(userId, score) {
     return data;
 }
 
+
 export async function uploadProfilePic(base64Image, username) {
     if (!base64Image.startsWith('data:image')) return base64Image;
 
