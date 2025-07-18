@@ -14,3 +14,10 @@ html, body {
   overflow: hidden; /* prevent scrollbars inside the app */
   position: relative; /* for positioning child elements */
 }
+
+* {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+}
